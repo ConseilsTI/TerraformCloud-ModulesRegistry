@@ -30,7 +30,6 @@ content: |-
 
   {{ .Outputs }}
 
-  <!-- markdownlint-enable -->
   {{ .Footer }}
 
 output:
