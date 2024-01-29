@@ -1,0 +1,10 @@
+# terrascan configuration file https://github.com/accurics/terrascan/blob/master/config/terrascan.toml
+
+# scan and skip rules configuration
+[rules]
+    # skip rules (list of rules to skip)
+    skip-rules = [
+        # The following rules are being tracked to determine the right outcome
+        "AC_AZURE_0389", # Ensure that Azure Resource Group has resource lock enabled (GitHub Issue #388)
+        "AC_AZURE_0356" # Ensure that Azure Virtual Network subnet is configured with a Network Security Group (GitHub Issue #389)
+    ]
