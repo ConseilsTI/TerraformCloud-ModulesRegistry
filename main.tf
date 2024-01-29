@@ -1,6 +1,6 @@
 # The following code block is used to create GitHub team.
 
-resource "github_team" "this" {
+resource "github_team" "contributor" {
   name                      = var.team_name
   description               = var.team_description
   privacy                   = "closed"
@@ -12,6 +12,7 @@ resource "github_repository" "this" {
   for_each               = toset(var.modules_name)
   name                   = lower(each.value)
   description            = "Terraform module to manage ${element(split("-", each.value), 1)} resources."
+  visibility             = "public"
   has_issues             = true
   has_projects           = true
   has_wiki               = true
@@ -53,7 +54,6 @@ resource "github_branch_protection" "this" {
     require_code_owner_reviews      = true
     required_approving_review_count = "0"
   }
-  force_push_bypassers = [ "/benyboy84" ]
 }
 
 resource "github_team_repository" "this" {
