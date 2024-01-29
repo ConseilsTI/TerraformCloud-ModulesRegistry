@@ -1,6 +1,6 @@
 # The following code block is used to create GitHub team.
 
-resource "github_team" "contributor" {
+resource "github_team" "this" {
   name                      = var.team_name
   description               = var.team_description
   privacy                   = "closed"
