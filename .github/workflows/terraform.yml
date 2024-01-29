@@ -6,7 +6,7 @@
 #
 # Documentation
 # - https://github.com/actions/checkout
-# - https://github.com/benyboy84/GitHubAction_terraform-fmt
+# - https://github.com/ConseilsTI/GitHubAction-TerraformFormat
 #
 
 name: Terraform
@@ -46,7 +46,7 @@ jobs:
 
       - name: Terraform Format
         id: fmt
-        uses: benyboy84/GitHubAction_terraform-fmt@v1
+        uses: ConseilsTI/GitHubAction-TerraformFormat@v1.0.0
         with:
           check: false
           recursive: true
