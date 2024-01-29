@@ -15,13 +15,8 @@ token from a team with that access instead of a user token.
 To manage the GitHub resources, provide a token from an account or a GitHub App with
 appropriate permissions. It should have:
 
-* `Administration`: Read and write
-* `Content`: Read and write</br>
-  *Required, otherwise, allow\_merge\_commit, allow\_rebase\_merge, and allow squash
-  merge attributes will be ignored, causing confusing diffs.*
-* `Metadata`: Read-only
-* `Secrets`: Read and write
-* `Iussue`: Read and write
+* Read access to `metadata`
+* Read and write access to `administration`, `members` and `code`
 
 ## Authentication
 
@@ -35,22 +30,22 @@ to authenticate. Refer to [Managing Variables](https://developer.hashicorp.com/t
 
 ### GitHub
 
-The GitHub provider requires a GitHub token or GitHub App installation in order to manage resources.
+The GitHub provider requires a GitHub App installation in order to manage resources.
 
-There are several ways to provide the required token:
+* Set the `GITHUB_APP_ID`, `GITHUB_APP_INSTALLATION_ID`, `GITHUB_APP_PEM_FILE`, and `GITHUB_OWNER`
+environment variables. The provider can read the GITHUB\_APP\_ID, GITHUB\_APP\_INSTALLATION\_ID,
+GITHUB\_APP\_PEM\_FILE, and GITHUB\_OWNER environment variables to authenticate.
 
-* Set the `token` argument in the provider configuration. You can set the `token` argument in the provider configuration. Use an
-input variable for the token.
-* Set the `GITHUB_TOKEN` environment variable. The provider can read the `GITHUB_TOKEN` environment variable and the token stored there
-to authenticate.
+> Because strings with new lines is not support:</br>
+> use "\\\n" within the `pem_file` argument to replace new line</br>
+> use "\n" within the `GITHUB_APP_PEM_FILE` environment variables to replace new line</br>
 
 ## Features
 
 * Manages configuration and life-cycle of GitHub resources:
   * Repository
   * Branch protection
-  * Actions repository permissions
-  * Issue label
+  * Teams
 * Manages configuration and life-cycle of Terraform Cloud resources:
   * Private module registry
 
@@ -76,37 +71,48 @@ The following input variables are required:
 
 ### <a name="input_modules_name"></a> [modules\_name](#input\_modules\_name)
 
-Description: A list of modules name to published.
+Description: (Required) A list of modules name to published.
 
 Type: `list(string)`
 
 ### <a name="input_oauth_client_name"></a> [oauth\_client\_name](#input\_oauth\_client\_name)
 
-Description: The name of the OAuth client.
+Description: (Required) The name of the OAuth client.
 
 Type: `string`
 
 ### <a name="input_organization_name"></a> [organization\_name](#input\_organization\_name)
 
-Description: The name of the Terraform Cloud organization.
+Description: (Required) The name of the Terraform Cloud organization.
+
+Type: `string`
+
+### <a name="input_team_name"></a> [team\_name](#input\_team\_name)
+
+Description: (Required) The name of the team.
 
 Type: `string`
 
 ## Optional Inputs
 
-No optional inputs.
+The following input variables are optional (have default values):
+
+### <a name="input_team_description"></a> [team\_description](#input\_team\_description)
+
+Description: (Optional) A description of the team.
+
+Type: `string`
+
+Default: `null`
 
 ## Resources
 
 The following resources are used by this module:
 
-- [github_actions_repository_permissions.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/actions_repository_permissions) (resource)
 - [github_branch_protection.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/branch_protection) (resource)
-- [github_issue_label.bump_version_scheme](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/issue_label) (resource)
-- [github_issue_label.major](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/issue_label) (resource)
-- [github_issue_label.minor](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/issue_label) (resource)
-- [github_issue_label.patch](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/issue_label) (resource)
 - [github_repository.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/repository) (resource)
+- [github_team.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team) (resource)
+- [github_team_repository.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team_repository) (resource)
 - [tfe_registry_module.this](https://registry.terraform.io/providers/hashicorp/tfe/0.51.1/docs/resources/registry_module) (resource)
 - [tfe_oauth_client.client](https://registry.terraform.io/providers/hashicorp/tfe/0.51.1/docs/data-sources/oauth_client) (data source)
 
@@ -114,7 +120,6 @@ The following resources are used by this module:
 
 No outputs.
 
-<!-- markdownlint-enable -->
 <!-- markdownlint-disable first-line-h1 -->
 ------
 >This GitHub repository is manage through Terraform Code from [TerraformCloud-Foundation](https://github.com/benyboy84/TerraformCloud-Foundation) repository.
