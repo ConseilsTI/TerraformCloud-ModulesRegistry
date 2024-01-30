@@ -12,6 +12,14 @@ terraform {
     }
   }
 
+  cloud {
+    organization = "ConseilsTI"
+
+    workspaces {
+      name = "TerraformCloud-ModulesRegistry"
+    }
+  }
+
   required_version = "> 1.6.0"
 
 }
