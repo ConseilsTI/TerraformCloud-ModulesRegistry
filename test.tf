@@ -67,7 +67,7 @@ output "actions_secret_updated_at" {
 
 output "actions_repository_permissions" {
   description = "GitHub Actions permissions for your repository."
-  value       = github_actions_repository_permissions.this
+  value       = module.test.actions_repository_permissions
 }
 
 output "branches" {
