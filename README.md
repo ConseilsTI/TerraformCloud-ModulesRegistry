@@ -63,7 +63,13 @@ The following requirements are needed by this module:
 
 ## Modules
 
-No modules.
+The following Modules are called:
+
+### <a name="module_test"></a> [test](#module\_test)
+
+Source: git::https://github.com/ConseilsTI/terraform-github-repository.git
+
+Version: v1.0.0
 
 ## Required Inputs
 
@@ -118,7 +124,63 @@ The following resources are used by this module:
 
 ## Outputs
 
-No outputs.
+The following outputs are exported:
+
+### <a name="output_actions_secret"></a> [actions\_secret](#output\_actions\_secret)
+
+Description: GitHub Actions secrets within your GitHub repository.
+
+### <a name="output_actions_secret_created_at"></a> [actions\_secret\_created\_at](#output\_actions\_secret\_created\_at)
+
+Description: Date of actions\_secret creation.
+
+### <a name="output_actions_secret_updated_at"></a> [actions\_secret\_updated\_at](#output\_actions\_secret\_updated\_at)
+
+Description: Date of actions\_secret update.
+
+### <a name="output_branch_protection"></a> [branch\_protection](#output\_branch\_protection)
+
+Description: GitHub branch protection within your GitHub repository.
+
+### <a name="output_full_name"></a> [full\_name](#output\_full\_name)
+
+Description: A string of the form "orgname/reponame".
+
+### <a name="output_git_clone_url"></a> [git\_clone\_url](#output\_git\_clone\_url)
+
+Description: URL that can be provided to git clone to clone the repository anonymously via the git protocol.
+
+### <a name="output_html_url"></a> [html\_url](#output\_html\_url)
+
+Description: URL to the repository on the web.
+
+### <a name="output_http_clone_url"></a> [http\_clone\_url](#output\_http\_clone\_url)
+
+Description: URL that can be provided to git clone to clone the repository via HTTPS.
+
+### <a name="output_node_id"></a> [node\_id](#output\_node\_id)
+
+Description: GraphQL global node id for use with v4 API.
+
+### <a name="output_primary_language"></a> [primary\_language](#output\_primary\_language)
+
+Description: The primary language used in the repository.
+
+### <a name="output_repo_id"></a> [repo\_id](#output\_repo\_id)
+
+Description: GitHub ID for the repository.
+
+### <a name="output_repository"></a> [repository](#output\_repository)
+
+Description: Repositories within your GitHub organization.
+
+### <a name="output_ssh_clone_url"></a> [ssh\_clone\_url](#output\_ssh\_clone\_url)
+
+Description: URL that can be provided to git clone to clone the repository via SSH.
+
+### <a name="output_svn_url"></a> [svn\_url](#output\_svn\_url)
+
+Description: URL that can be provided to svn checkout to check out the repository via GitHub's Subversion protocol emulation.
 
 <!-- markdownlint-disable first-line-h1 -->
 ------

@@ -32,7 +32,7 @@ resource "github_repository" "this" {
     }
   }
   template {
-    owner                = "benyboy84"
+    owner                = "conseilsti"
     repository           = "terraform-module-template"
     include_all_branches = false
   }
