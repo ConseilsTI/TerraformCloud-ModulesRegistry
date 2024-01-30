@@ -51,18 +51,18 @@ module "test" {
 
 output "actions_secret" {
   description = "GitHub Actions secrets within your GitHub repository."
-  value       = { for actions_secret in module.test.output.actions_secret : actions_secret.secret_name => actions_secret }
+  value       = { for actions_secret in module.test.actions_secret : actions_secret.secret_name => actions_secret }
   sensitive   = true
 }
 
 output "actions_secret_created_at" {
   description = "Date of actions_secret creation."
-  value       = { for actions_secret in module.test.output.actions_secret_created_at : actions_secret.secret_name => actions_secret.created_at }
+  value       = { for actions_secret in module.test.actions_secret_created_at : actions_secret.secret_name => actions_secret.created_at }
 }
 
 output "actions_secret_updated_at" {
   description = "Date of actions_secret update."
-  value       = { for actions_secret in module.test.output.actions_secret_updated_at : actions_secret.secret_name => actions_secret.updated_at }
+  value       = { for actions_secret in module.test.actions_secret_updated_at : actions_secret.secret_name => actions_secret.updated_at }
 }
 
 # output "actions_repository_permissions" {
