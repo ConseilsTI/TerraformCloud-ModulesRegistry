@@ -63,7 +63,13 @@ The following requirements are needed by this module:
 
 ## Modules
 
-No modules.
+The following Modules are called:
+
+### <a name="module_test"></a> [test](#module\_test)
+
+Source: git::https://github.com/ConseilsTI/terraform-github-repository.git
+
+Version: v1.0.0
 
 ## Required Inputs
 
