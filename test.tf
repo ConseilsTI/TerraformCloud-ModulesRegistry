@@ -95,22 +95,22 @@ output "branches_sha" {
   value       = module.test.branches_sha
 }
 
-# output "files" {
-#   description = "Files within your repository."
-#   value       = { for file in github_repository_file.this : file.file => file }
-# }
+output "files" {
+  description = "Files within your repository."
+  value       = module.test.files
+}
 
-# output "files_commit_sha" {
-#   description = "The SHA of the commit that modified the file."
-#   value       = { for file in github_repository_file.this : file.file => file.commit_sha }
-# }
+output "files_commit_sha" {
+  description = "The SHA of the commit that modified the file."
+  value       = module.test.files_commit_sha
+}
 
-# output "files_sha" {
-#   description = "The SHA blob of the file."
-#   value       = { for file in github_repository_file.this : file.file => file.sha }
-# }
+output "files_sha" {
+  description = "The SHA blob of the file."
+  value       = module.test.files_sha
+}
 
-# output "files_ref" {
-#   description = "The name of the commit/branch/tag."
-#   value       = { for file in github_repository_file.this : file.file => file.ref }
-# }
+output "files_ref" {
+  description = "The name of the commit/branch/tag."
+  value       = module.test.files_ref
+}
