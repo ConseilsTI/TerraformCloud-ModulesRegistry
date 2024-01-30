@@ -166,6 +166,22 @@ Description: A string storing the reference's HEAD commit's SHA1.
 
 Description: A string storing the commit this branch was started from. Not populated when imported.
 
+### <a name="output_files"></a> [files](#output\_files)
+
+Description: Files within your repository.
+
+### <a name="output_files_commit_sha"></a> [files\_commit\_sha](#output\_files\_commit\_sha)
+
+Description: The SHA of the commit that modified the file.
+
+### <a name="output_files_ref"></a> [files\_ref](#output\_files\_ref)
+
+Description: The name of the commit/branch/tag.
+
+### <a name="output_files_sha"></a> [files\_sha](#output\_files\_sha)
+
+Description: The SHA blob of the file.
+
 ### <a name="output_full_name"></a> [full\_name](#output\_full\_name)
 
 Description: A string of the form "orgname/reponame".
