@@ -63,13 +63,7 @@ The following requirements are needed by this module:
 
 ## Modules
 
-The following Modules are called:
-
-### <a name="module_test"></a> [test](#module\_test)
-
-Source: git::https://github.com/ConseilsTI/terraform-github-repository.git
-
-Version: v1.0.0
+No modules.
 
 ## Required Inputs
 
@@ -125,18 +119,6 @@ The following resources are used by this module:
 ## Outputs
 
 The following outputs are exported:
-
-### <a name="output_actions_secret"></a> [actions\_secret](#output\_actions\_secret)
-
-Description: GitHub Actions secrets within your GitHub repository.
-
-### <a name="output_actions_secret_created_at"></a> [actions\_secret\_created\_at](#output\_actions\_secret\_created\_at)
-
-Description: Date of actions\_secret creation.
-
-### <a name="output_actions_secret_updated_at"></a> [actions\_secret\_updated\_at](#output\_actions\_secret\_updated\_at)
-
-Description: Date of actions\_secret update.
 
 ### <a name="output_branch_protection"></a> [branch\_protection](#output\_branch\_protection)
 
