@@ -65,35 +65,35 @@ output "actions_secret_updated_at" {
   value       = module.test.actions_secret_updated_at
 }
 
-# output "actions_repository_permissions" {
-#   description = "GitHub Actions permissions for your repository."
-#   value       = github_actions_repository_permissions.this
-# }
+output "actions_repository_permissions" {
+  description = "GitHub Actions permissions for your repository."
+  value       = github_actions_repository_permissions.this
+}
 
-# output "branches" {
-#   description = "Branches within your repository."
-#   value       = { for github_branch in github_branch.this : github_branch.branch => github_branch }
-# }
+output "branches" {
+  description = "Branches within your repository."
+  value       = module.test.branches
+}
 
-# output "branches_source_sha" {
-#   description = "A string storing the commit this branch was started from. Not populated when imported."
-#   value       = { for github_branch in github_branch.this : github_branch.branch => github_branch.source_sha }
-# }
+output "branches_source_sha" {
+  description = "A string storing the commit this branch was started from. Not populated when imported."
+  value       = module.test.branches_source_sha
+}
 
-# output "branches_etag" {
-#   description = "An etag representing the Branch object."
-#   value       = { for github_branch in github_branch.this : github_branch.branch => github_branch.etag }
-# }
+output "branches_etag" {
+  description = "An etag representing the Branch object."
+  value       = module.test.branches_etag
+}
 
-# output "branches_ref" {
-#   description = "A string representing a branch reference, in the form of refs/heads/<branch>."
-#   value       = { for github_branch in github_branch.this : github_branch.branch => github_branch.ref }
-# }
+output "branches_ref" {
+  description = "A string representing a branch reference, in the form of refs/heads/<branch>."
+  value       = module.test.branches_ref
+}
 
-# output "branches_sha" {
-#   description = "A string storing the reference's HEAD commit's SHA1."
-#   value       = { for github_branch in github_branch.this : github_branch.branch => github_branch.sha }
-# }
+output "branches_sha" {
+  description = "A string storing the reference's HEAD commit's SHA1."
+  value       = module.test.branches_sha
+}
 
 # output "files" {
 #   description = "Files within your repository."
