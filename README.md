@@ -126,6 +126,10 @@ The following resources are used by this module:
 
 The following outputs are exported:
 
+### <a name="output_actions_repository_permissions"></a> [actions\_repository\_permissions](#output\_actions\_repository\_permissions)
+
+Description: GitHub Actions permissions for your repository.
+
 ### <a name="output_actions_secret"></a> [actions\_secret](#output\_actions\_secret)
 
 Description: GitHub Actions secrets within your GitHub repository.
@@ -141,6 +145,26 @@ Description: Date of actions\_secret update.
 ### <a name="output_branch_protection"></a> [branch\_protection](#output\_branch\_protection)
 
 Description: GitHub branch protection within your GitHub repository.
+
+### <a name="output_branches"></a> [branches](#output\_branches)
+
+Description: Branches within your repository.
+
+### <a name="output_branches_etag"></a> [branches\_etag](#output\_branches\_etag)
+
+Description: An etag representing the Branch object.
+
+### <a name="output_branches_ref"></a> [branches\_ref](#output\_branches\_ref)
+
+Description: A string representing a branch reference, in the form of refs/heads/<branch>.
+
+### <a name="output_branches_sha"></a> [branches\_sha](#output\_branches\_sha)
+
+Description: A string storing the reference's HEAD commit's SHA1.
+
+### <a name="output_branches_source_sha"></a> [branches\_source\_sha](#output\_branches\_source\_sha)
+
+Description: A string storing the commit this branch was started from. Not populated when imported.
 
 ### <a name="output_full_name"></a> [full\_name](#output\_full\_name)
 
