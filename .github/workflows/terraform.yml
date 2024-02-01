@@ -46,7 +46,7 @@ jobs:
 
       - name: Terraform Format
         id: fmt
-        uses: ConseilsTI/GitHubAction-TerraformFormat@v1.0.0
+        uses: ConseilsTI/GitHubAction-TerraformFormat@v1.0.1
         with:
           check: false
           recursive: true
