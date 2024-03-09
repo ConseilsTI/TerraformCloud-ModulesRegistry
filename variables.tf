@@ -17,7 +17,7 @@ variable "organization_name" {
   type        = string
 }
 
-variable "team_contributor" {
+variable "team_contributors" {
   description = <<EOT
   (Optional) The team_contributor block supports the following:
     name        : (Required) The name of the team.
