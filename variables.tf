@@ -39,10 +39,10 @@ variable "team_owners" {
     name        : (Required) The name of the team.
     description : (Optional) A description of the team.
   EOT
-  type = list(object({
+  type = object({
     name        = string
     description = optional(string, null)
-  }))
+  })
   default = {
     name        = "TerraformCloud-Modules-Owners"
     description = "Team to grant `admin` access to all Terraform modules and `owner`for any files in the /.github/workflows/ directory."
