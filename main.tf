@@ -73,7 +73,7 @@ resource "github_team_repository" "owners" {
   for_each   = toset(var.modules_name)
   team_id    = github_team.owners.id
   repository = lower(each.value)
-  permission = "admin"
+  permission = "push"
 }
 
 # The following block is use to get information about an OAuth client.
