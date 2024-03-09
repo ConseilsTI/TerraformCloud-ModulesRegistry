@@ -28,7 +28,7 @@ variable "team_contributor" {
     description = optional(string, null)
   })
   default = {
-    name        = "TerraformCloud-Modules-Contrinutors" 
+    name        = "TerraformCloud-Modules-Contrinutors"
     description = "Team to grant `write` access to all Terraform modules."
   }
 }
