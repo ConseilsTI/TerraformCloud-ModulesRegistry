@@ -91,7 +91,7 @@ Type: `string`
 
 The following input variables are optional (have default values):
 
-### <a name="input_team_contributor"></a> [team\_contributor](#input\_team\_contributor)
+### <a name="input_team_contributors"></a> [team\_contributors](#input\_team\_contributors)
 
 Description:   (Optional) The team\_contributor block supports the following:  
     name        : (Required) The name of the team.  
