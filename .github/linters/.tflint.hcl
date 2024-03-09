@@ -3,11 +3,6 @@ config {
   plugin_dir = "/root/.tflint.d/plugins"
 }
 
-# The following plugin adds rules specific to the azurerm provider
-plugin "azurerm" {
-  enabled = true
-}
-
 # The following section determines which rules which will be enabled
 
 rule "terraform_comment_syntax" {
