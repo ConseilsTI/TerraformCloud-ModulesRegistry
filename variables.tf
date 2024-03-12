@@ -44,7 +44,7 @@ variable "team_owners" {
     description = optional(string, null)
   })
   default = {
-    name        = "TerraformCloud-Modules-Owners"
+    name        = "TerraformCloud-ModulesRegistry-Owners"
     description = "Team to grant `write` access to all Terraform modules and `owner`for any files in the /.github/workflows/ directory."
   }
 }
