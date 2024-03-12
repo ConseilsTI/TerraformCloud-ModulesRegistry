@@ -87,57 +87,23 @@ Description: (Required) The name of the Terraform Cloud organization.
 
 Type: `string`
 
+### <a name="input_team_name"></a> [team\_name](#input\_team\_name)
+
+Description: (Required) The name of the team.
+
+Type: `string`
+
 ## Optional Inputs
 
 The following input variables are optional (have default values):
 
-### <a name="input_team_contributors"></a> [team\_contributors](#input\_team\_contributors)
+### <a name="input_team_description"></a> [team\_description](#input\_team\_description)
 
-Description:   (Optional) The team\_contributor block supports the following:  
-    name        : (Required) The name of the team.  
-    description : (Optional) A description of the team.
+Description: (Optional) A description of the team.
 
-Type:
+Type: `string`
 
-```hcl
-object({
-    name        = string
-    description = optional(string, null)
-  })
-```
-
-Default:
-
-```json
-{
-  "description": "Team to grant `write` access to all Terraform modules.",
-  "name": "TerraformCloud-Modules-Contrinutors"
-}
-```
-
-### <a name="input_team_owners"></a> [team\_owners](#input\_team\_owners)
-
-Description:   (Required) The team\_owners block supports the following:  
-    name        : (Required) The name of the team.  
-    description : (Optional) A description of the team.
-
-Type:
-
-```hcl
-object({
-    name        = string
-    description = optional(string, null)
-  })
-```
-
-Default:
-
-```json
-{
-  "description": "Team to grant `write` access to all Terraform modules and `owner`for any files in the /.github/workflows/ directory.",
-  "name": "TerraformCloud-ModulesRegistry-Owners"
-}
-```
+Default: `null`
 
 ## Resources
 
@@ -145,10 +111,8 @@ The following resources are used by this module:
 
 - [github_branch_protection.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/branch_protection) (resource)
 - [github_repository.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/repository) (resource)
-- [github_team.contributors](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team) (resource)
-- [github_team.owners](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team) (resource)
-- [github_team_repository.contributors](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team_repository) (resource)
-- [github_team_repository.owners](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team_repository) (resource)
+- [github_team.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team) (resource)
+- [github_team_repository.modules_contributors](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team_repository) (resource)
 - [tfe_registry_module.this](https://registry.terraform.io/providers/hashicorp/tfe/0.51.1/docs/resources/registry_module) (resource)
 - [tfe_oauth_client.client](https://registry.terraform.io/providers/hashicorp/tfe/0.51.1/docs/data-sources/oauth_client) (data source)
 
