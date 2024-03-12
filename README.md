@@ -112,8 +112,11 @@ The following resources are used by this module:
 - [github_branch_protection.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/branch_protection) (resource)
 - [github_repository.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/repository) (resource)
 - [github_team.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team) (resource)
-- [github_team_repository.modules-contributors](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team_repository) (resource)
+- [github_team_repository.modules_contributors](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team_repository) (resource)
+- [github_team_repository.modules_registry_contributors](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team_repository) (resource)
+- [github_team_repository.modules_registry_owners](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team_repository) (resource)
 - [tfe_registry_module.this](https://registry.terraform.io/providers/hashicorp/tfe/0.51.1/docs/resources/registry_module) (resource)
+- [terraform_remote_state.foundation](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) (data source)
 - [tfe_oauth_client.client](https://registry.terraform.io/providers/hashicorp/tfe/0.51.1/docs/data-sources/oauth_client) (data source)
 
 ## Outputs
