@@ -63,6 +63,31 @@ resource "github_team_repository" "modules_contributors" {
   permission = "push"
 }
 
+data "terraform_remote_state" "foundation" {
+  backend = "remote"
+
+  config = {
+    organization = "ConseilsTI"
+    workspaces = {
+      name = "TerraformCloud-Foundation"
+    }
+  }
+}
+
+resource "github_team_repository" "modules_registry_owners" {
+  for_each   = toset(var.modules_name)
+  team_id    = data.terraform_remote_state.foundation.outputs.modules_registry_github_owners_team
+  repository = lower(each.value)
+  permission = "push"
+}
+
+resource "github_team_repository" "modules_registry_contributors" {
+  for_each   = toset(var.modules_name)
+  team_id    = data.terraform_remote_state.foundation.outputs.modules_registry_github_contributors_team
+  repository = lower(each.value)
+  permission = "push"
+}
+
 # The following block is use to get information about an OAuth client.
 
 data "tfe_oauth_client" "client" {
