@@ -134,8 +134,8 @@ Default:
 
 ```json
 {
-  "description": "Team to grant `admin` access to all Terraform modules and `owner`for any files in the /.github/workflows/ directory.",
-  "name": "TerraformCloud-Modules-Owners"
+  "description": "Team to grant `write` access to all Terraform modules and `owner`for any files in the /.github/workflows/ directory.",
+  "name": "TerraformCloud-ModulesRegistry-Owners"
 }
 ```
 
