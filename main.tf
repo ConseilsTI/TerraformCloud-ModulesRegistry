@@ -56,7 +56,7 @@ resource "github_branch_protection" "this" {
   }
 }
 
-resource "github_team_repository" "modules-contributors" {
+resource "github_team_repository" "modules_contributors" {
   for_each   = toset(var.modules_name)
   team_id    = github_team.this.id
   repository = lower(each.value)
