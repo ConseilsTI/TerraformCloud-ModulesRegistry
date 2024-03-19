@@ -1,19 +1,3 @@
-locals {
-  # This local is used to define all required secrets that we have to read from Hashicorp Vault Secrets.
-  hcp_vault_secrets = [
-    # `hcp_vault_secrets` is a list of object.
-    #  Here is an example of an object:
-    #  {
-    #    app_name = ""
-    #    secret   = ""
-    #  }
-    {
-      app_name = "TerraformCloud"
-      secret   = "TFC_API_TOKEN"
-    }
-  ]
-}
-
 # The following code block is used to create GitHub team.
 
 resource "github_team" "this" {
