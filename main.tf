@@ -39,19 +39,6 @@ resource "github_repository" "this" {
   vulnerability_alerts = true
 }
 
-# The following block is used to retrieve secrets and their latest version values for a given application.
-
-data "hcp_vault_secrets_secret" "tfc_api_token" {
-  app_name    = "TerraformCloud"
-  secret_name = lower(replace("manage_modules", "/\\W|_|\\s/", "_"))
-}
-
-resource "github_actions_secret" "this" {
-  for_each        = toset(var.modules_name)
-  repository      = github_repository.this[each.value].name
-  secret_name     = "TFC_API_TOKEN"
-  plaintext_value = data.hcp_vault_secrets_secret.tfc_api_token.secret_value
-}
 
 resource "github_branch_protection" "this" {
   for_each                        = toset(var.modules_name)
@@ -70,13 +57,6 @@ resource "github_branch_protection" "this" {
   }
 }
 
-resource "github_team_repository" "modules_contributors" {
-  for_each   = toset(var.modules_name)
-  team_id    = github_team.this.id
-  repository = lower(each.value)
-  permission = "push"
-}
-
 data "terraform_remote_state" "foundation" {
   backend = "remote"
 
@@ -86,6 +66,20 @@ data "terraform_remote_state" "foundation" {
       name = "TerraformCloud-Foundation"
     }
   }
+}
+
+resource "github_actions_secret" "manage_modules_team_token" {
+  for_each        = toset(var.modules_name)
+  repository      = github_repository.this[each.value].name
+  secret_name     = "TFC_API_TOKEN"
+  plaintext_value = data.terraform_remote_state.foundation.outputs.manage_modules_team_token
+}
+
+resource "github_team_repository" "modules_contributors" {
+  for_each   = toset(var.modules_name)
+  team_id    = github_team.this.id
+  repository = lower(each.value)
+  permission = "push"
 }
 
 resource "github_team_repository" "modules_registry_owners" {
@@ -123,4 +117,10 @@ resource "tfe_registry_module" "this" {
     oauth_token_id     = data.tfe_oauth_client.client.oauth_token_id
     branch             = "main"
   }
+}
+
+locals {
+  github_modules = flatten([for module in var.modules_name :
+    module if lower(element(split("-",module),1)) == "github"
+  ])
 }
