@@ -121,6 +121,6 @@ resource "tfe_registry_module" "this" {
 
 locals {
   github_modules = flatten([for module in var.modules_name :
-    module if lower(element(split("-",module),1)) == "github"
+    module if lower(element(split("-", module), 1)) == "github"
   ])
 }
