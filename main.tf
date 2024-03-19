@@ -39,6 +39,20 @@ resource "github_repository" "this" {
   vulnerability_alerts = true
 }
 
+# The following block is used to retrieve secrets and their latest version values for a given application.
+
+data "hcp_vault_secrets_secret" "tfc_api_token" {
+  app_name    = "TerraformCloud"
+  secret_name = lower(replace("manage_modules", "/\\W|_|\\s/", "_"))
+}
+
+resource "github_actions_secret" "this" {
+  for_each        = toset(var.modules_name)
+  repository      = github_repository.this[each.value].name
+  secret_name     = "TFC_API_TOKEN"
+  plaintext_value = data.hcp_vault_secrets_secret.tfc_api_token.secret_value
+}
+
 resource "github_branch_protection" "this" {
   for_each                        = toset(var.modules_name)
   repository_id                   = github_repository.this[each.value].name

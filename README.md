@@ -18,6 +18,9 @@ appropriate permissions. It should have:
 * Read access to `metadata`
 * Read and write access to `administration`, `members` and `code`
 
+To read secrets from Hashicorp Vault Secrets, provide a client ID and a key
+from a service principals with the secret `reader` role.
+
 ## Authentication
 
 ### Terraform Cloud
@@ -40,6 +43,19 @@ GITHUB\_APP\_PEM\_FILE, and GITHUB\_OWNER environment variables to authenticate.
 > use "\\\n" within the `pem_file` argument to replace new line</br>
 > use "\n" within the `GITHUB_APP_PEM_FILE` environment variables to replace new line</br>
 
+### Hashicorp Vault Secrets Authentication
+
+The Hashicorp Vault Secrets provider requires a service principal client ID and
+a key in order to manage resources.
+
+* Set the `HCP_CLIENT_ID` environment variable: The provider can read the HCP\_CLIENT\_ID
+environment variable and the client ID stored there to authenticate. Refer to
+[Managing Variables](https://developer.hashicorp.com/terraform/cloud-docs/workspaces/variables/managing-variables) documentation for more details.
+
+* Set the `HCP_CLIENT_SECRET` environment variable: The provider can read the HCP\_CLIENT\_SECRET
+environment variable and the client ID stored there to authenticate. Refer to
+[Managing Variables](https://developer.hashicorp.com/terraform/cloud-docs/workspaces/variables/managing-variables) documentation for more details.
+
 ## Features
 
 * Manages configuration and life-cycle of GitHub resources:
@@ -58,6 +74,8 @@ The following requirements are needed by this module:
 - <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (> 1.6.0)
 
 - <a name="requirement_github"></a> [github](#requirement\_github) (5.44.0)
+
+- <a name="requirement_hcp"></a> [hcp](#requirement\_hcp) (~>0.76)
 
 - <a name="requirement_tfe"></a> [tfe](#requirement\_tfe) (0.51.1)
 
@@ -109,11 +127,15 @@ Default: `null`
 
 The following resources are used by this module:
 
+- [github_actions_secret.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/actions_secret) (resource)
 - [github_branch_protection.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/branch_protection) (resource)
 - [github_repository.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/repository) (resource)
 - [github_team.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team) (resource)
 - [github_team_repository.modules_contributors](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team_repository) (resource)
+- [github_team_repository.modules_registry_contributors](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team_repository) (resource)
+- [github_team_repository.modules_registry_owners](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team_repository) (resource)
 - [tfe_registry_module.this](https://registry.terraform.io/providers/hashicorp/tfe/0.51.1/docs/resources/registry_module) (resource)
+- [hcp_vault_secrets_secret.tfc_api_token](https://registry.terraform.io/providers/hashicorp/hcp/latest/docs/data-sources/vault_secrets_secret) (data source)
 - [terraform_remote_state.foundation](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) (data source)
 - [tfe_oauth_client.client](https://registry.terraform.io/providers/hashicorp/tfe/0.51.1/docs/data-sources/oauth_client) (data source)
 

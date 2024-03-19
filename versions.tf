@@ -10,6 +10,10 @@ terraform {
       source  = "integrations/github"
       version = "5.44.0"
     }
+    hcp = {
+      source  = "hashicorp/hcp"
+      version = "~>0.76"
+    }
   }
 
   required_version = "> 1.6.0"
