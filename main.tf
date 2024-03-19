@@ -1,3 +1,19 @@
+locals {
+  # This local is used to define all required secrets that we have to read from Hashicorp Vault Secrets.
+  hcp_vault_secrets = [
+    # `hcp_vault_secrets` is a list of object.
+    #  Here is an example of an object:
+    #  {
+    #    app_name = ""
+    #    secret   = ""
+    #  }
+    {
+      app_name = "TerraformCloud"
+      secret   = "TFC_API_TOKEN"
+    }
+  ]
+}
+
 # The following code block is used to create GitHub team.
 
 resource "github_team" "this" {
@@ -37,6 +53,20 @@ resource "github_repository" "this" {
     include_all_branches = false
   }
   vulnerability_alerts = true
+}
+
+# The following block is used to retrieve secrets and their latest version values for a given application.
+
+data "hcp_vault_secrets_secret" "TFC_API_TOKEN" {
+  app_name    = "TerraformCloud"
+  secret_name = "manage-modules"
+}
+
+resource "github_actions_secret" "this" {
+  for_each        = toset(var.modules_name)
+  repository      = github_repository.this[each.value].name
+  secret_name     = "TFC_API_TOKEN"
+  plaintext_value = data.hcp_vault_secrets_secret.TFC_API_TOKEN.secret_value
 }
 
 resource "github_branch_protection" "this" {

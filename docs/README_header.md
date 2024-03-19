@@ -17,6 +17,9 @@ appropriate permissions. It should have:
 * Read access to `metadata`
 * Read and write access to `administration`, `members` and `code`
 
+To read secrets from Hashicorp Vault Secrets, provide a client ID and a key
+from a service principals with the secret `reader` role.
+
 ## Authentication
 
 ### Terraform Cloud
@@ -38,6 +41,19 @@ GITHUB_APP_PEM_FILE, and GITHUB_OWNER environment variables to authenticate.
 > Because strings with new lines is not support:</br>
 > use "\\\n" within the `pem_file` argument to replace new line</br>
 > use "\n" within the `GITHUB_APP_PEM_FILE` environment variables to replace new line</br>
+
+### Hashicorp Vault Secrets Authentication
+
+The Hashicorp Vault Secrets provider requires a service principal client ID and
+a key in order to manage resources.
+
+* Set the `HCP_CLIENT_ID` environment variable: The provider can read the HCP_CLIENT_ID
+environment variable and the client ID stored there to authenticate. Refer to
+[Managing Variables](https://developer.hashicorp.com/terraform/cloud-docs/workspaces/variables/managing-variables) documentation for more details.
+
+* Set the `HCP_CLIENT_SECRET` environment variable: The provider can read the HCP_CLIENT_SECRET
+environment variable and the client ID stored there to authenticate. Refer to
+[Managing Variables](https://developer.hashicorp.com/terraform/cloud-docs/workspaces/variables/managing-variables) documentation for more details.
 
 ## Features
 
