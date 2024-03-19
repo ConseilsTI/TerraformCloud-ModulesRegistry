@@ -75,6 +75,8 @@ The following requirements are needed by this module:
 
 - <a name="requirement_github"></a> [github](#requirement\_github) (5.44.0)
 
+- <a name="requirement_hcp"></a> [hcp](#requirement\_hcp) (~>0.76)
+
 - <a name="requirement_tfe"></a> [tfe](#requirement\_tfe) (0.51.1)
 
 ## Modules
@@ -133,7 +135,7 @@ The following resources are used by this module:
 - [github_team_repository.modules_registry_contributors](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team_repository) (resource)
 - [github_team_repository.modules_registry_owners](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team_repository) (resource)
 - [tfe_registry_module.this](https://registry.terraform.io/providers/hashicorp/tfe/0.51.1/docs/resources/registry_module) (resource)
-- [hcp_vault_secrets_secret.TFC_API_TOKEN](https://registry.terraform.io/providers/hashicorp/hcp/latest/docs/data-sources/vault_secrets_secret) (data source)
+- [hcp_vault_secrets_secret.tfc_api_token](https://registry.terraform.io/providers/hashicorp/hcp/latest/docs/data-sources/vault_secrets_secret) (data source)
 - [terraform_remote_state.foundation](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) (data source)
 - [tfe_oauth_client.client](https://registry.terraform.io/providers/hashicorp/tfe/0.51.1/docs/data-sources/oauth_client) (data source)
 
