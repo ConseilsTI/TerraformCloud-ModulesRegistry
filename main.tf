@@ -43,7 +43,7 @@ resource "github_repository" "this" {
 
 data "hcp_vault_secrets_secret" "tfc_api_token" {
   app_name    = "TerraformCloud"
-  secret_name = "manage-modules"
+  secret_name = lower(replace("manage_modules", "/\\W|_|\\s/", "_"))
 }
 
 resource "github_actions_secret" "this" {
