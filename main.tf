@@ -129,7 +129,7 @@ locals {
 resource "terraform_data" "github_app_id" {
   for_each = toset(local.github_modules)
   triggers_replace = [
-    github_repository.this[each.value.name].id
+    github_repository.this[each.value].id
   ]
 
   provisioner "local-exec" {
