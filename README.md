@@ -1,5 +1,5 @@
 <!-- BEGIN_TF_DOCS -->
-# Terraform Cloud Foundation
+# Terraform Cloud Private Modules Registry
 
 Code which manages configuration and life-cycle of all the Terraform Cloud
 module in the private registry. It is designed to be used from a dedicated
@@ -127,15 +127,15 @@ Default: `null`
 
 The following resources are used by this module:
 
-- [github_actions_secret.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/actions_secret) (resource)
+- [github_actions_secret.manage_modules_team_token](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/actions_secret) (resource)
 - [github_branch_protection.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/branch_protection) (resource)
 - [github_repository.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/repository) (resource)
 - [github_team.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team) (resource)
 - [github_team_repository.modules_contributors](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team_repository) (resource)
 - [github_team_repository.modules_registry_contributors](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team_repository) (resource)
 - [github_team_repository.modules_registry_owners](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team_repository) (resource)
+- [terraform_data.github_app_id](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/resources/data) (resource)
 - [tfe_registry_module.this](https://registry.terraform.io/providers/hashicorp/tfe/0.51.1/docs/resources/registry_module) (resource)
-- [hcp_vault_secrets_secret.tfc_api_token](https://registry.terraform.io/providers/hashicorp/hcp/latest/docs/data-sources/vault_secrets_secret) (data source)
 - [terraform_remote_state.foundation](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) (data source)
 - [tfe_oauth_client.client](https://registry.terraform.io/providers/hashicorp/tfe/0.51.1/docs/data-sources/oauth_client) (data source)
 
@@ -189,5 +189,5 @@ Description: URL that can be provided to svn checkout to check out the repositor
 
 <!-- markdownlint-disable first-line-h1 -->
 ------
->This GitHub repository is manage through Terraform Code from [TerraformCloud-Foundation](https://github.com/benyboy84/TerraformCloud-Foundation) repository.
+>This GitHub repository is manage through Terraform Code from [TerraformCloud-Foundation](https://github.com/ConseilsTI/TerraformCloud-Foundation) repository.
 <!-- END_TF_DOCS -->

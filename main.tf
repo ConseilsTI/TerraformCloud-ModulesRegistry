@@ -36,26 +36,14 @@ resource "github_repository" "this" {
     repository           = "terraform-module-template"
     include_all_branches = false
   }
+  topics               = ["terraform", "terraform-module", "terraform-cloud"]
   vulnerability_alerts = true
 }
 
-# The following block is used to retrieve secrets and their latest version values for a given application.
-
-data "hcp_vault_secrets_secret" "tfc_api_token" {
-  app_name    = "TerraformCloud"
-  secret_name = lower(replace("manage_modules", "/\\W|_|\\s/", "_"))
-}
-
-resource "github_actions_secret" "this" {
-  for_each        = toset(var.modules_name)
-  repository      = github_repository.this[each.value].name
-  secret_name     = "TFC_API_TOKEN"
-  plaintext_value = data.hcp_vault_secrets_secret.tfc_api_token.secret_value
-}
 
 resource "github_branch_protection" "this" {
-  for_each                        = toset(var.modules_name)
-  repository_id                   = github_repository.this[each.value].name
+  for_each                        = github_repository.this
+  repository_id                   = each.value.name
   pattern                         = "main"
   enforce_admins                  = true
   require_conversation_resolution = true
@@ -70,13 +58,6 @@ resource "github_branch_protection" "this" {
   }
 }
 
-resource "github_team_repository" "modules_contributors" {
-  for_each   = toset(var.modules_name)
-  team_id    = github_team.this.id
-  repository = lower(each.value)
-  permission = "push"
-}
-
 data "terraform_remote_state" "foundation" {
   backend = "remote"
 
@@ -88,17 +69,31 @@ data "terraform_remote_state" "foundation" {
   }
 }
 
+resource "github_actions_secret" "manage_modules_team_token" {
+  for_each        = github_repository.this
+  repository      = github_repository.this[each.value.name].name
+  secret_name     = "TFC_API_TOKEN"
+  plaintext_value = data.terraform_remote_state.foundation.outputs.manage_modules_team_token
+}
+
+resource "github_team_repository" "modules_contributors" {
+  for_each   = github_repository.this
+  team_id    = github_team.this.id
+  repository = lower(each.value.name)
+  permission = "push"
+}
+
 resource "github_team_repository" "modules_registry_owners" {
-  for_each   = toset(var.modules_name)
+  for_each   = github_repository.this
   team_id    = data.terraform_remote_state.foundation.outputs.modules_registry_github_owners_team
-  repository = lower(each.value)
+  repository = lower(each.value.name)
   permission = "push"
 }
 
 resource "github_team_repository" "modules_registry_contributors" {
-  for_each   = toset(var.modules_name)
+  for_each   = github_repository.this
   team_id    = data.terraform_remote_state.foundation.outputs.modules_registry_github_contributors_team
-  repository = lower(each.value)
+  repository = lower(each.value.name)
   permission = "push"
 }
 
@@ -123,4 +118,31 @@ resource "tfe_registry_module" "this" {
     oauth_token_id     = data.tfe_oauth_client.client.oauth_token_id
     branch             = "main"
   }
+}
+
+locals {
+  github_modules = flatten([for module in var.modules_name :
+    module if lower(element(split("-", module), 1)) == "github"
+  ])
+}
+
+resource "terraform_data" "github_app_id" {
+  for_each = toset(local.github_modules)
+  triggers_replace = [
+    github_repository.this[each.value].id
+  ]
+
+  provisioner "local-exec" {
+    command = "./scripts/set_test_variables.sh"
+    environment = {
+      TFC_ORGANIZATION = var.organization_name
+      MODULE_PROVIDER  = lower(element(split("-", each.value), 1))
+      MODULE_NAME      = "repository"
+      TFC_API_TOKEN    = data.terraform_remote_state.foundation.outputs.manage_modules_team_token
+      VAR_KEY          = "GITHUB_APP_ID"
+      VAR_VALUE        = "288"
+    }
+  }
+
+  depends_on = [tfe_registry_module.this]
 }
