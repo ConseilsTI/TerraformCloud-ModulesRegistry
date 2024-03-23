@@ -134,6 +134,7 @@ The following resources are used by this module:
 - [github_team_repository.modules_contributors](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team_repository) (resource)
 - [github_team_repository.modules_registry_contributors](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team_repository) (resource)
 - [github_team_repository.modules_registry_owners](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team_repository) (resource)
+- [terraform_data.github](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/resources/data) (resource)
 - [tfe_registry_module.this](https://registry.terraform.io/providers/hashicorp/tfe/0.51.1/docs/resources/registry_module) (resource)
 - [terraform_remote_state.foundation](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) (data source)
 - [tfe_oauth_client.client](https://registry.terraform.io/providers/hashicorp/tfe/0.51.1/docs/data-sources/oauth_client) (data source)
@@ -188,5 +189,5 @@ Description: URL that can be provided to svn checkout to check out the repositor
 
 <!-- markdownlint-disable first-line-h1 -->
 ------
->This GitHub repository is manage through Terraform Code from [TerraformCloud-Foundation](https://github.com/benyboy84/TerraformCloud-Foundation) repository.
+>This GitHub repository is manage through Terraform Code from [TerraformCloud-Foundation](https://github.com/ConseilsTI/TerraformCloud-Foundation) repository.
 <!-- END_TF_DOCS -->
