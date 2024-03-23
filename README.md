@@ -1,5 +1,5 @@
 <!-- BEGIN_TF_DOCS -->
-# Terraform Cloud Foundation
+# Terraform Cloud Private Modules Registry
 
 Code which manages configuration and life-cycle of all the Terraform Cloud
 module in the private registry. It is designed to be used from a dedicated
