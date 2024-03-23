@@ -127,7 +127,7 @@ locals {
 }
 
 resource "terraform_data" "github_app_id" {
-  for_each = local.github_modules
+  for_each = toset(local.github_modules)
   triggers_replace = [
     github_repository.this[each.value.name].id
   ]
@@ -143,4 +143,6 @@ resource "terraform_data" "github_app_id" {
       VAR_VALUE        = "288"
     }
   }
+
+  depends_on = [ tfe_registry_module.this ]
 }
