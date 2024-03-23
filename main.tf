@@ -133,7 +133,8 @@ resource "terraform_data" "github_app_id" {
   ]
 
   provisioner "local-exec" {
-    command = "./scripts/set_test_variables.sh"
+    command     = "./scripts/set_test_variables.sh"
+    interpreter = "/bin/sh"
     environment = {
       TFC_ORGANIZATION = var.organization_name
       MODULE_PROVIDER  = lower(element(split("-", each.value), 1))
