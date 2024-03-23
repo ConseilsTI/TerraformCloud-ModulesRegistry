@@ -36,7 +36,7 @@ resource "github_repository" "this" {
     repository           = "terraform-module-template"
     include_all_branches = false
   }
-  topics     = ["terraform", "terraform-module", "terraform-cloud"]
+  topics               = ["terraform", "terraform-module", "terraform-cloud"]
   vulnerability_alerts = true
 }
 
@@ -144,5 +144,5 @@ resource "terraform_data" "github_app_id" {
     }
   }
 
-  depends_on = [ tfe_registry_module.this ]
+  depends_on = [tfe_registry_module.this]
 }
