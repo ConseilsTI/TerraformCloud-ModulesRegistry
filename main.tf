@@ -126,21 +126,21 @@ locals {
   ])
 }
 
-resource "terraform_data" "github" {
-  for_each = github_repository.this
+resource "terraform_data" "github_app_id" {
+  for_each = local.github_modules
   triggers_replace = [
     github_repository.this[each.value.name].id
   ]
 
   provisioner "local-exec" {
-    command = "./scripts/test_variables.sh"
+    command = "./scripts/set_test_variables.sh"
     environment = {
       TFC_ORGANIZATION = var.organization_name
-      MODULE_PROVIDER  = ""
-      MODULE_NAME      = ""
-      TFC_API_TOKEN    = ""
-      VAR_KEY          = ""
-      VAR_VALUE        = ""
+      MODULE_PROVIDER  = lower(element(split("-", each.value), 1))
+      MODULE_NAME      = "repository"
+      TFC_API_TOKEN    = data.terraform_remote_state.foundation.outputs.manage_modules_team_token
+      VAR_KEY          = "GITHUB_APP_ID"
+      VAR_VALUE        = "288"
     }
   }
 }
