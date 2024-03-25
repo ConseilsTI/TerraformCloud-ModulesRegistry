@@ -29,7 +29,7 @@ id=$(echo "${run}" | jq -r --arg key "${VAR_KEY}" '.data[] | select(.attributes.
 
 if [[ "${id}" ]]; then
   json_string='{"data":{"attributes":{"key":"'"${VAR_KEY}"'","value":"'"${VAR_VALUE//$'\n'/\\n}"'"},"type":"vars"}}'
-  json_payload=$(echo "${json_string}" | jq)
+  json_payload=$(echo -n "${json_string}" | jq)
   {
     run=$(curl --request PATCH --url "${tfc_api_url}/organizations/${TFC_ORGANIZATION}/tests/registry-modules/private/${TFC_ORGANIZATION}/${MODULE_NAME}/${MODULE_PROVIDER}/vars/${id}" \
     --header "${auth_header}" --header "${content_header}" --data "${json_payload}")
