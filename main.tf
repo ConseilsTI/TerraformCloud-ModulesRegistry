@@ -142,7 +142,7 @@ data "hcp_vault_secrets_secret" "github_module_variables" {
 }
 
 resource "terraform_data" "github_module_variables" {
-  for_each = { for module in local.github_modules : "${module.module_name}-${module.secret_name}" => module }
+  for_each = { for module in local.github_modules : "${module.module_name}-${module.name}" => module }
 
   triggers_replace = [
     github_repository.this[each.value.module_name].id
@@ -156,7 +156,7 @@ resource "terraform_data" "github_module_variables" {
       MODULE_NAME      = substr(each.value.module_name, 17, length(each.value.module_name) - 17)
       TFC_API_TOKEN    = var.tfc_api_token.value != null ? var.tfc_api_token.value : data.hcp_vault_secrets_secret.tfc_api_token[0].secret_value
       VAR_KEY          = each.value.secret_name
-      VAR_VALUE        = each.value.secret_value != null ? each.value.secret_value : "${data.hcp_vault_secrets_secret.github_module_variables[each.value.secret_name].secret_value}"
+      VAR_VALUE        = each.value.value != null ? each.value.value : "${data.hcp_vault_secrets_secret.github_module_variables[each.value.secret_name].secret_value}"
     }
   }
 
