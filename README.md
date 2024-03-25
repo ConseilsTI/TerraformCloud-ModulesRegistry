@@ -105,6 +105,23 @@ Description: (Required) The name of the Terraform Cloud organization.
 
 Type: `string`
 
+### <a name="input_tfc_api_token"></a> [tfc\_api\_token](#input\_tfc\_api\_token)
+
+Description:   (Required) The `tfc_api_token` is a block with the following:  
+    secret\_app  : (Optional) The name of the Hashicorp Vault Secrets application where the secret can be found in and can only be used if `value` is not used.  
+    secret\_name : (Optional) The Hashicorp Vault Secrets secret name where the `TFC_API_TOKEN` with permission to managed modules can be found in and can only be used if `value` is not used.  
+    value       : (Optional) The `TFC_API_TOKEN` with permission to managed modules and can only be used if `secret_app` and `secret_name` are not used.
+
+Type:
+
+```hcl
+object({
+    secret_app   = optional(string, null)
+    secret_name  = optional(string, null)
+    value        = optional(string, null)
+  })
+```
+
 ## Optional Inputs
 
 The following input variables are optional (have default values):
@@ -112,17 +129,19 @@ The following input variables are optional (have default values):
 ### <a name="input_github_enviromnent_variables"></a> [github\_enviromnent\_variables](#input\_github\_enviromnent\_variables)
 
 Description:   (Optional) The `github_enviromnent_variables` is a list of object block with the following:  
-    secret\_name  : (Required) The environment variable name required to authenticate with GitHub API.  
-    secret\_app   : (Optional) The name of the Hashicorp Vault Secrets application where the secret can be found in and can only be used if 'value' is not used.   
-    secret\_value : (Optional) The environment variable value required to authenticate with GitHub API and can only be used if 'app' is not used.
+    name        : (Required) The environment variable name required to authenticate with GitHub API.  
+    secret\_app  : (Optional) The name of the Hashicorp Vault Secrets application where the secret can be found in and can only be used if `value` is not used.  
+    secret\_name : (Optional) The Hashicorp Vault Secrets secret name where the environment variable can be found in and can only be used if `value` is not used.  
+    value       : (Optional) The environment variable value required to authenticate with GitHub API and can only be used if `secret_app` and `secret_name` are not used.
 
 Type:
 
 ```hcl
 list(object({
-    secret_name  = string
-    secret_app   = optional(string, null)
-    secret_value = optional(string, null)
+    name        = string
+    secret_app  = optional(string, null)
+    secret_name = optional(string, null)
+    value       = optional(string, null)
   }))
 ```
 
@@ -162,6 +181,7 @@ The following resources are used by this module:
 - [tfe_registry_module.this](https://registry.terraform.io/providers/hashicorp/tfe/0.51.1/docs/resources/registry_module) (resource)
 - [github_team.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/data-sources/team) (data source)
 - [hcp_vault_secrets_secret.github_module_variables](https://registry.terraform.io/providers/hashicorp/hcp/latest/docs/data-sources/vault_secrets_secret) (data source)
+- [hcp_vault_secrets_secret.tfc_api_token](https://registry.terraform.io/providers/hashicorp/hcp/latest/docs/data-sources/vault_secrets_secret) (data source)
 - [tfe_oauth_client.client](https://registry.terraform.io/providers/hashicorp/tfe/0.51.1/docs/data-sources/oauth_client) (data source)
 
 ## Outputs
