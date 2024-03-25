@@ -120,7 +120,7 @@ resource "tfe_registry_module" "this" {
   }
 }
 
-locals {  
+locals {
   github_modules = flatten([for module in var.modules_name :
     flatten([for variable in var.github_enviromnent_variables :
       merge(
@@ -130,31 +130,31 @@ locals {
         }
       )
     ]) if lower(element(split("-", module), 1)) == "github"
-  ]) 
+  ])
 }
 
 data "hcp_vault_secrets_secret" "github_module_variables" {
-  for_each = {for module in local.github_modules : module.secret_name => module}
+  for_each    = { for module in local.github_modules : module.secret_name => module }
   app_name    = each.value.secret_app
   secret_name = each.value.secret_name
 }
 
 resource "terraform_data" "github_module_variables" {
-  for_each = {for module in local.github_modules : "${module.module_name}-${module.secret_name}" => module}
+  for_each = { for module in local.github_modules : "${module.module_name}-${module.secret_name}" => module }
 
   triggers_replace = [
     github_repository.this[each.value].id
   ]
 
   provisioner "local-exec" {
-    command     = "bash ./scripts/set_test_variables.sh"
+    command = "bash ./scripts/set_test_variables.sh"
     environment = {
       TFC_ORGANIZATION = var.organization_name
       MODULE_PROVIDER  = lower(element(split("-", each.value.module_name), 1))
-      MODULE_NAME      = substr(each.value, 17, length(each.value.module_name) -17)
+      MODULE_NAME      = substr(each.value, 17, length(each.value.module_name) - 17)
       TFC_API_TOKEN    = data.terraform_remote_state.foundation.outputs.manage_modules_team_token
       VAR_KEY          = each.value.secret_name
-      VAR_VALUE        = try(data.hcp_vault_secrets_secret.github_module_variables[each.value.secret_name].secret_value,each.value.secret_value)
+      VAR_VALUE        = try(data.hcp_vault_secrets_secret.github_module_variables[each.value.secret_name].secret_value, each.value.secret_value)
     }
   }
 
