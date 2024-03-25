@@ -116,9 +116,9 @@ Type:
 
 ```hcl
 object({
-    secret_app   = optional(string, null)
-    secret_name  = optional(string, null)
-    value        = optional(string, null)
+    secret_app  = optional(string, null)
+    secret_name = optional(string, null)
+    value       = optional(string, null)
   })
 ```
 

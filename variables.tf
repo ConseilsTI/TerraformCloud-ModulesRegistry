@@ -25,9 +25,9 @@ variable "tfc_api_token" {
     value       : (Optional) The `TFC_API_TOKEN` with permission to managed modules and can only be used if `secret_app` and `secret_name` are not used.
   EOT
   type = object({
-    secret_app   = optional(string, null)
-    secret_name  = optional(string, null)
-    value        = optional(string, null)
+    secret_app  = optional(string, null)
+    secret_name = optional(string, null)
+    value       = optional(string, null)
   })
 
   validation {
