@@ -43,7 +43,7 @@ variable "github_enviromnent_variables" {
   default = null
 
   validation {
-    condition = var.github_enviromnent_variables != null ? alltrue([ for v in var.github_enviromnent_variables : (v.secret_app != null && v.secret_value != null) || (v.secret_app == null && v.secret_value == null) ? false : true ]) ? true : false : true
+    condition     = var.github_enviromnent_variables != null ? alltrue([for v in var.github_enviromnent_variables : (v.secret_app != null && v.secret_value != null) || (v.secret_app == null && v.secret_value == null) ? false : true]) ? true : false : true
     error_message = "value"
   }
 }
