@@ -105,21 +105,66 @@ Description: (Required) The name of the Terraform Cloud organization.
 
 Type: `string`
 
-### <a name="input_team_name"></a> [team\_name](#input\_team\_name)
+### <a name="input_tfc_api_token"></a> [tfc\_api\_token](#input\_tfc\_api\_token)
 
-Description: (Required) The name of the team.
+Description:   (Required) The `tfc_api_token` is a block with the following:  
+    secret\_app  : (Optional) The name of the Hashicorp Vault Secrets application where the secret can be found in and can only be used if `value` is not used.  
+    secret\_name : (Optional) The Hashicorp Vault Secrets secret name where the `TFC_API_TOKEN` with permission to managed modules can be found in and can only be used if `value` is not used.  
+    value       : (Optional) The `TFC_API_TOKEN` with permission to managed modules and can only be used if `secret_app` and `secret_name` are not used.
 
-Type: `string`
+Type:
+
+```hcl
+object({
+    secret_app  = optional(string, null)
+    secret_name = optional(string, null)
+    value       = optional(string, null)
+  })
+```
 
 ## Optional Inputs
 
 The following input variables are optional (have default values):
 
-### <a name="input_team_description"></a> [team\_description](#input\_team\_description)
+### <a name="input_github_enviromnent_variables"></a> [github\_enviromnent\_variables](#input\_github\_enviromnent\_variables)
 
-Description: (Optional) A description of the team.
+Description:   (Optional) The `github_enviromnent_variables` is a list of object block with the following:  
+    name        : (Required) The environment variable name required to authenticate with GitHub API.  
+    secret\_app  : (Optional) The name of the Hashicorp Vault Secrets application where the secret can be found in and can only be used if `value` is not used.  
+    secret\_name : (Optional) The Hashicorp Vault Secrets secret name where the environment variable can be found in and can only be used if `value` is not used.  
+    value       : (Optional) The environment variable value required to authenticate with GitHub API and can only be used if `secret_app` and `secret_name` are not used.
 
-Type: `string`
+Type:
+
+```hcl
+list(object({
+    name        = string
+    secret_app  = optional(string, null)
+    secret_name = optional(string, null)
+    value       = optional(string, null)
+  }))
+```
+
+Default: `null`
+
+### <a name="input_teams"></a> [teams](#input\_teams)
+
+Description:   (Optional) The `teams` is a list of object block with the following:  
+    name        : (Required) The name of the team which will have access to every Terraform module.  
+    create      : (Optional) Whether to create the team.  
+    description : (Optional) A description of the team.  
+    permission  : (Optional) The permissions of team members regarding the repository. Valid values are `pull`, `triage`, `push`, `maintain`, `admin`.
+
+Type:
+
+```hcl
+list(object({
+    name        = string
+    create      = optional(bool, false)
+    description = optional(string, null)
+    permission  = optional(string, "pull")
+  }))
+```
 
 Default: `null`
 
@@ -127,16 +172,16 @@ Default: `null`
 
 The following resources are used by this module:
 
-- [github_actions_secret.manage_modules_team_token](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/actions_secret) (resource)
+- [github_actions_secret.tfc_api_token](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/actions_secret) (resource)
 - [github_branch_protection.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/branch_protection) (resource)
 - [github_repository.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/repository) (resource)
 - [github_team.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team) (resource)
-- [github_team_repository.modules_contributors](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team_repository) (resource)
-- [github_team_repository.modules_registry_contributors](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team_repository) (resource)
-- [github_team_repository.modules_registry_owners](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team_repository) (resource)
-- [terraform_data.github_app_id](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/resources/data) (resource)
+- [github_team_repository.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team_repository) (resource)
+- [terraform_data.github_module_variables](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/resources/data) (resource)
 - [tfe_registry_module.this](https://registry.terraform.io/providers/hashicorp/tfe/0.51.1/docs/resources/registry_module) (resource)
-- [terraform_remote_state.foundation](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) (data source)
+- [github_team.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/data-sources/team) (data source)
+- [hcp_vault_secrets_secret.github_module_variables](https://registry.terraform.io/providers/hashicorp/hcp/latest/docs/data-sources/vault_secrets_secret) (data source)
+- [hcp_vault_secrets_secret.tfc_api_token](https://registry.terraform.io/providers/hashicorp/hcp/latest/docs/data-sources/vault_secrets_secret) (data source)
 - [tfe_oauth_client.client](https://registry.terraform.io/providers/hashicorp/tfe/0.51.1/docs/data-sources/oauth_client) (data source)
 
 ## Outputs
