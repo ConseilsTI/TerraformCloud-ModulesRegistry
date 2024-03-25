@@ -17,27 +17,60 @@ variable "organization_name" {
   type        = string
 }
 
+variable "tfc_api_token" {
+  description = <<EOT
+  (Required) The `tfc_api_token` is a block with the following:
+    secret_app  : (Optional) The name of the Hashicorp Vault Secrets application where the secret can be found in and can only be used if `value` is not used.
+    secret_name : (Optional) The Hashicorp Vault Secrets secret name where the `TFC_API_TOKEN` with permission to managed modules can be found in and can only be used if `value` is not used.
+    value       : (Optional) The `TFC_API_TOKEN` with permission to managed modules and can only be used if `secret_app` and `secret_name` are not used.
+  EOT
+  type = object({
+    secret_app   = optional(string, null)
+    secret_name  = optional(string, null)
+    value        = optional(string, null)
+  })
+
+  validation {
+    condition     = var.tfc_api_token.secret_app != null && var.tfc_api_token.secret_name == null ? false : true
+    error_message = "`secret_name` must be defined when `secret_app` is used."
+  }
+  validation {
+    condition     = var.tfc_api_token.secret_app == null && var.tfc_api_token.secret_name != null ? false : true
+    error_message = "`secret_app` must be defined when `secret_name` is used."
+  }
+  validation {
+    condition     = var.tfc_api_token.value != null && (var.tfc_api_token.secret_app != null || var.tfc_api_token.secret_name != null) ? false : true
+    error_message = "`value`cannot be used when `secret_app` and `secret_name` are used."
+  }
+}
+
 variable "github_enviromnent_variables" {
   description = <<EOT
   (Optional) The `github_enviromnent_variables` is a list of object block with the following:
-    secret_name  : (Required) The environment variable name required to authenticate with GitHub API.
-    secret_app   : (Optional) The name of the Hashicorp Vault Secrets application where the secret can be found in and can only be used if 'value' is not used. 
-    secret_value : (Optional) The environment variable value required to authenticate with GitHub API and can only be used if 'app' is not used.
+    name        : (Required) The environment variable name required to authenticate with GitHub API.
+    secret_app  : (Optional) The name of the Hashicorp Vault Secrets application where the secret can be found in and can only be used if `value` is not used.
+    secret_name : (Optional) The Hashicorp Vault Secrets secret name where the environment variable can be found in and can only be used if `value` is not used.
+    value       : (Optional) The environment variable value required to authenticate with GitHub API and can only be used if `secret_app` and `secret_name` are not used.
   EOT
   type = list(object({
-    secret_name  = string
-    secret_app   = optional(string, null)
-    secret_value = optional(string, null)
+    name        = string
+    secret_app  = optional(string, null)
+    secret_name = optional(string, null)
+    value       = optional(string, null)
   }))
   default = null
 
   validation {
-    condition     = var.github_enviromnent_variables != null ? alltrue([for v in var.github_enviromnent_variables : v.secret_app != null && v.secret_value != null ? false : true]) ? true : false : true
-    error_message = "`secret_app` and `secret_value` cannot be used at the same time."
+    condition     = var.github_enviromnent_variables != null ? alltrue([for v in var.github_enviromnent_variables : v.value != null && (v.secret_app != null || v.secret_name != null) ? false : true]) ? true : false : true
+    error_message = "`value` cannot be used when `secret_app` and `secret_name` are used."
   }
   validation {
-    condition     = var.github_enviromnent_variables != null ? alltrue([for v in var.github_enviromnent_variables : v.secret_app == null && v.secret_value == null ? false : true]) ? true : false : true
-    error_message = "`secret_app` or `secret_value` must be used."
+    condition     = var.github_enviromnent_variables != null ? alltrue([for v in var.github_enviromnent_variables : v.secret_app != null && v.secret_name == null ? false : true]) ? true : false : true
+    error_message = "`secret_name` must be defined when `secret_app` is used."
+  }
+  validation {
+    condition     = var.github_enviromnent_variables != null ? alltrue([for v in var.github_enviromnent_variables : v.secret_app == null && v.secret_name != null ? false : true]) ? true : false : true
+    error_message = "`secret_app` must be defined when `secret_name` is used."
   }
 }
 

@@ -66,12 +66,17 @@ resource "github_branch_protection" "this" {
   }
 }
 
+data "hcp_vault_secrets_secret" "tfc_api_token" {
+  for_each    = var.tfc_api_token.secret_app != null && var.tfc_api_token.secret_name != null ? 1 : 0
+  app_name    = var.tfc_api_token.secret_app
+  secret_name = var.tfc_api_token.secret_name
+}
+
 resource "github_actions_secret" "manage_modules_team_token" {
   for_each        = github_repository.this
   repository      = github_repository.this[each.value.name].name
   secret_name     = "TFC_API_TOKEN"
-  plaintext_value = "test"
-  # plaintext_value = data.terraform_remote_state.foundation.outputs.manage_modules_team_token
+  plaintext_value = var.tfc_api_token.value != null ? var.tfc_api_token.value : data.hcp_vault_secrets_secret.tfc_api_token.secret_value
 }
 
 locals {
@@ -149,10 +154,9 @@ resource "terraform_data" "github_module_variables" {
       TFC_ORGANIZATION = var.organization_name
       MODULE_PROVIDER  = lower(element(split("-", each.value.module_name), 1))
       MODULE_NAME      = substr(each.value, 17, length(each.value.module_name) - 17)
-      # TFC_API_TOKEN    = data.terraform_remote_state.foundation.outputs.manage_modules_team_token
-      TFC_API_TOKEN = "test"
-      VAR_KEY       = each.value.secret_name
-      VAR_VALUE     = try(data.hcp_vault_secrets_secret.github_module_variables[each.value.secret_name].secret_value, each.value.secret_value)
+      TFC_API_TOKEN    = var.tfc_api_token.value != null ? var.tfc_api_token.value : data.hcp_vault_secrets_secret.tfc_api_token.secret_value
+      VAR_KEY          = each.value.secret_name
+      VAR_VALUE        = try(data.hcp_vault_secrets_secret.github_module_variables[each.value.secret_name].secret_value, each.value.secret_value)
     }
   }
 
