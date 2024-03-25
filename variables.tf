@@ -37,8 +37,8 @@ variable "github_enviromnent_variables" {
   EOT
   type = list(object({
     secret_name  = string
-    secret_app   = Optional(string, null)
-    secret_value = Optional(string, null)
+    secret_app   = optional(string, null)
+    secret_value = optional(string, null)
   }))
   default = null
 
