@@ -28,7 +28,7 @@ content_header="Content-Type: application/vnd.api+json"
 id=$(echo "${run}" | jq -r --arg key "${VAR_KEY}" '.data[] | select(.attributes.key|test ($key)) | .id')
 
 if [[ "${id}" ]]; then
-  json_string='{"data":{"attributes":{"key":"'"${VAR_KEY}"'","value":"'"${VAR_VALUE//$'\n'/\\n}"'"},"type":"vars"}}'
+  json_string='{"data":{"attributes":{"key":"'"${VAR_KEY}"'","value":"'"${VAR_VALUE//$'\n'/\\\\n}"'"},"type":"vars"}}'
   json_payload=$(echo -n "${json_string}" | jq)
   {
     run=$(curl --request PATCH --url "${tfc_api_url}/organizations/${TFC_ORGANIZATION}/tests/registry-modules/private/${TFC_ORGANIZATION}/${MODULE_NAME}/${MODULE_PROVIDER}/vars/${id}" \
@@ -42,7 +42,7 @@ if [[ "${id}" ]]; then
     exit 1
   }
 else
-  json_string='{"data": {"type":"vars","attributes":{"key":"'"${VAR_KEY}"'","value":"'"${VAR_VALUE}"'","category":"env","sensitive":true}}}'
+  json_string='{"data": {"type":"vars","attributes":{"key":"'"${VAR_KEY}"'","value":"'"${VAR_VALUE//$'\n'/\\\\n}"'","category":"env","sensitive":true}}}'
   json_payload=$(echo "${json_string}" | jq)
   {
     run=$(curl --request POST --url "${tfc_api_url}/organizations/${TFC_ORGANIZATION}/tests/registry-modules/private/${TFC_ORGANIZATION}/${MODULE_NAME}/${MODULE_PROVIDER}/vars" \
