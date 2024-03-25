@@ -1,7 +1,7 @@
 # The following code block is used to create GitHub team.
 
 resource "github_team" "this" {
-  for_each    = {for team in var.teams : team.name => team.name if team.create}
+  for_each    = { for team in var.teams : team.name => team.name if team.create }
   name        = each.value.name
   description = each.value.description
   privacy     = "closed"
@@ -10,7 +10,7 @@ resource "github_team" "this" {
 # The following code block is use to get information about GitHub team.
 
 data "github_team" "this" {
-  for_each = {for team in var.teams : team.name => team.name if ! team.create}
+  for_each = { for team in var.teams : team.name => team.name if !team.create }
   slug     = each.value.name
 }
 
@@ -77,7 +77,7 @@ resource "github_actions_secret" "manage_modules_team_token" {
 locals {
   github_team_repository = flatten([for team in var.teams :
     flatten([for repository in github_repository.this :
-      merge (
+      merge(
         team,
         {
           repository = repository.name
