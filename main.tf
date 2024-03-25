@@ -1,9 +1,17 @@
 # The following code block is used to create GitHub team.
 
 resource "github_team" "this" {
-  name        = var.team_name
-  description = var.team_description
+  for_each    = {for team in var.teams : team.name => team.name if team.create}
+  name        = each.value.name
+  description = each.value.description
   privacy     = "closed"
+}
+
+# The following code block is use to get information about GitHub team.
+
+data "github_team" "this" {
+  for_each = {for team in var.teams : team.name => team.name if ! team.create}
+  slug     = each.value.name
 }
 
 # The following code block is used to create GitHub repository.
@@ -58,17 +66,6 @@ resource "github_branch_protection" "this" {
   }
 }
 
-data "terraform_remote_state" "foundation" {
-  backend = "remote"
-
-  config = {
-    organization = "ConseilsTI"
-    workspaces = {
-      name = "TerraformCloud-Foundation"
-    }
-  }
-}
-
 resource "github_actions_secret" "manage_modules_team_token" {
   for_each        = github_repository.this
   repository      = github_repository.this[each.value.name].name
@@ -76,25 +73,24 @@ resource "github_actions_secret" "manage_modules_team_token" {
   plaintext_value = data.terraform_remote_state.foundation.outputs.manage_modules_team_token
 }
 
-resource "github_team_repository" "modules_contributors" {
-  for_each   = github_repository.this
-  team_id    = github_team.this.id
-  repository = lower(each.value.name)
-  permission = "push"
+locals {
+  github_team_repository = flatten([for team in var.teams :
+    flatten([for repository in github_repository.this :
+      merge (
+        team,
+        {
+          repository = repository.name
+        }
+      )
+    ])
+  ])
 }
 
-resource "github_team_repository" "modules_registry_owners" {
-  for_each   = github_repository.this
-  team_id    = data.terraform_remote_state.foundation.outputs.modules_registry_github_owners_team
-  repository = lower(each.value.name)
-  permission = "push"
-}
-
-resource "github_team_repository" "modules_registry_contributors" {
-  for_each   = github_repository.this
-  team_id    = data.terraform_remote_state.foundation.outputs.modules_registry_github_contributors_team
-  repository = lower(each.value.name)
-  permission = "push"
+resource "github_team_repository" "this" {
+  for_each   = local.github_team_repository
+  team_id    = each.value.create ? github_team.this[each.value.name].id : data.github_team.this[each.value.name].id
+  repository = each.value.repository
+  permission = each.value.permission
 }
 
 # The following block is use to get information about an OAuth client.

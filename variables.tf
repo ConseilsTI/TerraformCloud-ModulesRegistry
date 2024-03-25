@@ -17,17 +17,6 @@ variable "organization_name" {
   type        = string
 }
 
-variable "team_name" {
-  description = "(Required) The name of the team."
-  type        = string
-}
-
-variable "team_description" {
-  description = "(Optional) A description of the team."
-  type        = string
-  default     = null
-}
-
 variable "github_enviromnent_variables" {
   description = <<EOT
   (Optional) The `github_enviromnent_variables` is a list of object block with the following:
@@ -43,7 +32,33 @@ variable "github_enviromnent_variables" {
   default = null
 
   validation {
-    condition     = var.github_enviromnent_variables != null ? alltrue([for v in var.github_enviromnent_variables : (v.secret_app != null && v.secret_value != null) || (v.secret_app == null && v.secret_value == null) ? false : true]) ? true : false : true
-    error_message = "value"
+    condition     = var.github_enviromnent_variables != null ? alltrue([for v in var.github_enviromnent_variables : v.secret_app != null && v.secret_value != null ? false : true]) ? true : false : true
+    error_message = "`secret_app` and `secret_value` cannot be used at the same time."
+  }
+  validation {
+    condition     = var.github_enviromnent_variables != null ? alltrue([for v in var.github_enviromnent_variables : v.secret_app == null && v.secret_value == null ? false : true]) ? true : false : true
+    error_message = "`secret_app` or `secret_value` must be used."
+  }
+}
+
+variable "teams" {
+  description = <<EOT
+  (Optional) The `teams` is a list of object block with the following:
+    name        : (Required) The name of the team which will have access to every Terraform module.
+    create      : (Optional) Whether to create the team.
+    description : (Optional) A description of the team.
+    permission  : (Optional) The permissions of team members regarding the repository. Valid values are `pull`, `triage`, `push`, `maintain`, `admin`.
+  EOT
+  type = list(object({
+    name        = string 
+    create      = optional(bool, false)
+    description = optional(string, null)
+    permission  = optional(string, "pull")
+  }))
+  default = null
+
+  validation {
+    condition     = var.teams != null ? alltrue([for v in var.teams : contains(["pull", "triage", "push", "maintain", "admin"], v) ? true : false]) ? true : false : true
+    error_message = "Valid values for `permission` are \"pull\", \"triage\", \"push\", \"maintain\", \"admin\"."
   }
 }
