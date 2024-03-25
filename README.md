@@ -62,8 +62,10 @@ environment variable and the client ID stored there to authenticate. Refer to
   * Repository
   * Branch protection
   * Teams
+  * Secret
 * Manages configuration and life-cycle of Terraform Cloud resources:
   * Private module registry
+  * Private module registry test environment variable
 
 ## Documentation
 
