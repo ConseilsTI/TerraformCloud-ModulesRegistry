@@ -27,3 +27,23 @@ variable "team_description" {
   type        = string
   default     = null
 }
+
+variable "github_enviromnent_variables" {
+  description = <<EOT
+  (Optional) The `github_enviromnent_variables` is a list of object block with the following:
+    secret_name  : (Required) The environment variable name required to authenticate with GitHub API.
+    secret_app   : (Optional) The name of the Hashicorp Vault Secrets application where the secret can be found in and can only be used if 'value' is not used. 
+    secret_value : (Optional) The environment variable value required to authenticate with GitHub API and can only be used if 'app' is not used.
+  EOT
+  type = list(object({
+    secret_name  = string
+    secret_app   = Optional(string, null)
+    secret_value = Optional(string, null)
+  }))
+  default = null
+
+  validation {
+    condition = var.github_enviromnent_variables != null ? alltrue([ for v in var.github_enviromnent_variables : (v.secret_app != null && v.secret_value != null) || (v.secret_app == null && v.secret_value == null) ? false : true ]) ? true : false : true
+    error_message = "value"
+  }
+}
