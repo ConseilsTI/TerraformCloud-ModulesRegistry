@@ -143,7 +143,7 @@ resource "terraform_data" "github_module_variables" {
   for_each = { for module in local.github_modules : "${module.module_name}-${module.secret_name}" => module }
 
   triggers_replace = [
-    github_repository.this[each.value].id
+    github_repository.this[each.value.module_name].id
   ]
 
   provisioner "local-exec" {
