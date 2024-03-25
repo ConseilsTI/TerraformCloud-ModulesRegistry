@@ -50,7 +50,7 @@ variable "teams" {
     permission  : (Optional) The permissions of team members regarding the repository. Valid values are `pull`, `triage`, `push`, `maintain`, `admin`.
   EOT
   type = list(object({
-    name        = string 
+    name        = string
     create      = optional(bool, false)
     description = optional(string, null)
     permission  = optional(string, "pull")
