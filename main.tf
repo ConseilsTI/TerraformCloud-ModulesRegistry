@@ -149,9 +149,10 @@ resource "terraform_data" "github_module_variables" {
       TFC_ORGANIZATION = var.organization_name
       MODULE_PROVIDER  = lower(element(split("-", each.value.module_name), 1))
       MODULE_NAME      = substr(each.value, 17, length(each.value.module_name) - 17)
-      TFC_API_TOKEN    = data.terraform_remote_state.foundation.outputs.manage_modules_team_token
-      VAR_KEY          = each.value.secret_name
-      VAR_VALUE        = try(data.hcp_vault_secrets_secret.github_module_variables[each.value.secret_name].secret_value, each.value.secret_value)
+      # TFC_API_TOKEN    = data.terraform_remote_state.foundation.outputs.manage_modules_team_token
+      TFC_API_TOKEN = "test"
+      VAR_KEY       = each.value.secret_name
+      VAR_VALUE     = try(data.hcp_vault_secrets_secret.github_module_variables[each.value.secret_name].secret_value, each.value.secret_value)
     }
   }
 
