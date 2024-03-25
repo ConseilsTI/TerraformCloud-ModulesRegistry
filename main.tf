@@ -1,7 +1,7 @@
 # The following code block is used to create GitHub team.
 
 resource "github_team" "this" {
-  for_each    = { for team in var.teams : team.name => team.name if team.create }
+  for_each    = { for team in var.teams : team.name => team if team.create }
   name        = each.value.name
   description = each.value.description
   privacy     = "closed"
@@ -10,7 +10,7 @@ resource "github_team" "this" {
 # The following code block is use to get information about GitHub team.
 
 data "github_team" "this" {
-  for_each = { for team in var.teams : team.name => team.name if !team.create }
+  for_each = { for team in var.teams : team.name => team if !team.create }
   slug     = each.value.name
 }
 
