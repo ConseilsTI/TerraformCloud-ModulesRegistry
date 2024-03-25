@@ -72,7 +72,7 @@ data "hcp_vault_secrets_secret" "tfc_api_token" {
   secret_name = var.tfc_api_token.secret_name
 }
 
-resource "github_actions_secret" "manage_modules_team_token" {
+resource "github_actions_secret" "tfc_api_token" {
   for_each        = github_repository.this
   repository      = github_repository.this[each.value.name].name
   secret_name     = "TFC_API_TOKEN"
