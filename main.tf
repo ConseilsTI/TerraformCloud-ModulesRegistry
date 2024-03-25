@@ -88,7 +88,7 @@ locals {
 }
 
 resource "github_team_repository" "this" {
-  for_each   = local.github_team_repository
+  for_each   = {for team_repository in local.github_team_repository : "${team_repository.repository}-${team_repository.name}" => team_repository}
   team_id    = each.value.create ? github_team.this[each.value.name].id : data.github_team.this[each.value.name].id
   repository = each.value.repository
   permission = each.value.permission
