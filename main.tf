@@ -70,6 +70,7 @@ resource "github_actions_secret" "manage_modules_team_token" {
   for_each        = github_repository.this
   repository      = github_repository.this[each.value.name].name
   secret_name     = "TFC_API_TOKEN"
+  plaintext_value = "test"
   plaintext_value = data.terraform_remote_state.foundation.outputs.manage_modules_team_token
 }
 
