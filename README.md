@@ -62,8 +62,10 @@ environment variable and the client ID stored there to authenticate. Refer to
   * Repository
   * Branch protection
   * Teams
+  * Secret
 * Manages configuration and life-cycle of Terraform Cloud resources:
   * Private module registry
+  * Private module registry test environment variable
 
 ## Documentation
 
@@ -172,7 +174,7 @@ Default: `null`
 
 The following resources are used by this module:
 
-- [github_actions_secret.manage_modules_team_token](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/actions_secret) (resource)
+- [github_actions_secret.tfc_api_token](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/actions_secret) (resource)
 - [github_branch_protection.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/branch_protection) (resource)
 - [github_repository.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/repository) (resource)
 - [github_team.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team) (resource)
