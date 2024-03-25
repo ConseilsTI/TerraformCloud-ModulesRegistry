@@ -58,7 +58,7 @@ variable "teams" {
   default = null
 
   validation {
-    condition     = var.teams != null ? alltrue([for v in var.teams : contains(["pull", "triage", "push", "maintain", "admin"], v) ? true : false]) ? true : false : true
+    condition     = var.teams != null ? alltrue([for v in var.teams : contains(["pull", "triage", "push", "maintain", "admin"], v.permission) ? true : false]) ? true : false : true
     error_message = "Valid values for `permission` are \"pull\", \"triage\", \"push\", \"maintain\", \"admin\"."
   }
 }
