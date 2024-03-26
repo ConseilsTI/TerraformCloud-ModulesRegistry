@@ -62,8 +62,10 @@ environment variable and the client ID stored there to authenticate. Refer to
   * Repository
   * Branch protection
   * Teams
+  * Secret
 * Manages configuration and life-cycle of Terraform Cloud resources:
   * Private module registry
+  * Private module registry test environment variable
 
 ## Documentation
 
@@ -73,11 +75,11 @@ The following requirements are needed by this module:
 
 - <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (> 1.6.0)
 
-- <a name="requirement_github"></a> [github](#requirement\_github) (5.44.0)
+- <a name="requirement_github"></a> [github](#requirement\_github) (~>5.44)
 
 - <a name="requirement_hcp"></a> [hcp](#requirement\_hcp) (~>0.76)
 
-- <a name="requirement_tfe"></a> [tfe](#requirement\_tfe) (0.51.1)
+- <a name="requirement_tfe"></a> [tfe](#requirement\_tfe) (~>0.51)
 
 ## Modules
 
@@ -172,17 +174,17 @@ Default: `null`
 
 The following resources are used by this module:
 
-- [github_actions_secret.manage_modules_team_token](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/actions_secret) (resource)
-- [github_branch_protection.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/branch_protection) (resource)
-- [github_repository.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/repository) (resource)
-- [github_team.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team) (resource)
-- [github_team_repository.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/resources/team_repository) (resource)
+- [github_actions_secret.tfc_api_token](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_secret) (resource)
+- [github_branch_protection.this](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/branch_protection) (resource)
+- [github_repository.this](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository) (resource)
+- [github_team.this](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/team) (resource)
+- [github_team_repository.this](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/team_repository) (resource)
 - [terraform_data.github_module_variables](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/resources/data) (resource)
-- [tfe_registry_module.this](https://registry.terraform.io/providers/hashicorp/tfe/0.51.1/docs/resources/registry_module) (resource)
-- [github_team.this](https://registry.terraform.io/providers/integrations/github/5.44.0/docs/data-sources/team) (data source)
+- [tfe_registry_module.this](https://registry.terraform.io/providers/hashicorp/tfe/latest/docs/resources/registry_module) (resource)
+- [github_team.this](https://registry.terraform.io/providers/integrations/github/latest/docs/data-sources/team) (data source)
 - [hcp_vault_secrets_secret.github_module_variables](https://registry.terraform.io/providers/hashicorp/hcp/latest/docs/data-sources/vault_secrets_secret) (data source)
 - [hcp_vault_secrets_secret.tfc_api_token](https://registry.terraform.io/providers/hashicorp/hcp/latest/docs/data-sources/vault_secrets_secret) (data source)
-- [tfe_oauth_client.client](https://registry.terraform.io/providers/hashicorp/tfe/0.51.1/docs/data-sources/oauth_client) (data source)
+- [tfe_oauth_client.client](https://registry.terraform.io/providers/hashicorp/tfe/latest/docs/data-sources/oauth_client) (data source)
 
 ## Outputs
 
