@@ -40,7 +40,7 @@ resource "github_repository" "this" {
     }
   }
   template {
-    owner                = "conseilsti"
+    owner                = "ConseilsTI"
     repository           = "terraform-module-template"
     include_all_branches = false
   }
