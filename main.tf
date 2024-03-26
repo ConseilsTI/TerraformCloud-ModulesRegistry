@@ -155,7 +155,7 @@ resource "terraform_data" "github_module_variables" {
       MODULE_PROVIDER  = lower(element(split("-", each.value.module_name), 1))
       MODULE_NAME      = substr(each.value.module_name, 17, length(each.value.module_name) - 17)
       TFC_API_TOKEN    = var.tfc_api_token.value != null ? var.tfc_api_token.value : data.hcp_vault_secrets_secret.tfc_api_token[0].secret_value
-      VAR_KEY          = each.value.secret_name
+      VAR_KEY          = each.value.name
       VAR_VALUE        = each.value.value != null ? each.value.value : data.hcp_vault_secrets_secret.github_module_variables[each.value.secret_name].secret_value
     }
   }
