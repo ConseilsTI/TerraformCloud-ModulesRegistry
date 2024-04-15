@@ -73,4 +73,11 @@ jobs:
           content_header="Content-Type: application/vnd.api+json"
           echo "INFO     | Run API call to get variable ID."
           run=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/workspaces/${{ steps.get_workspace_id.outputs.workspace_id }}/vars")
-          id=$(echo "${run}" | jq '.data[] | select(.attributes.key|test ("${{ github.event.inputs.key }}") ) | .id')
+          variable_id=$(echo "${run}" | jq '.data[] | select(.attributes.key|test ("${{ github.event.inputs.key }}") ) | .id')
+          if [[ "${ variable_id}" != "null" ]]; then
+            echo "INFO     | Variable ID: $ variable_id}."
+            echo " variable_id=${ variable_id}" >> $GITHUB_OUTPUT
+          else
+            echo "ERROR    | Unable to get variable ID."
+            exit 1
+          fi
