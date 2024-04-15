@@ -40,13 +40,13 @@ jobs:
           EVENT_CONTEXT: ${{ toJSON(github.event) }}
         run: |
           echo "INFO     | Build required variable."
-          workspace_name=$(echo $EVENT_CONTEXT | jq ".repository.name" | sed 's|\"||g')
+          workspace_name=$(echo "${EVENT_CONTEXT}" | jq ".repository.name" | sed 's|\"||g')
           workspace_name="${workspace_name,,}"
           tfc_api_url="https://app.terraform.io/api/v2"
           auth_header="Authorization: Bearer ${TFC_API_TOKEN}"
           content_header="Content-Type: application/vnd.api+json"
           echo "INFO     | Run API call to get workspace ID."
-          run=$(curl -sS -H "${auth_header}" -H ${content_header} -L "${tfc_api_url}/organizations/${end.tfc_organization}/workspaces/${workspace_name}")
+          run=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/organizations/${end.tfc_organization}/workspaces/${workspace_name}")
           if ! [[ ${run} =~ "{\"data\":" ]]; then
             echo "ERROR    | Unable to get workspace ID."
             echo "${run}"
