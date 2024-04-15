@@ -47,6 +47,7 @@ jobs:
           auth_header="Authorization: Bearer ${TFC_API_TOKEN}"
           content_header="Content-Type: application/vnd.api+json"
           echo "INFO     | Run API call to get workspace ID."
+          echo "${tfc_api_url}/organizations/${env.tfc_organization}/workspaces/${workspace_name}"
           run=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/organizations/${env.tfc_organization}/workspaces/${workspace_name}")
           if ! [[ ${run} =~ "{\"data\":" ]]; then
             echo "ERROR    | Unable to get workspace ID."
