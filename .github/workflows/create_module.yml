@@ -56,5 +56,6 @@ jobs:
           fi
           workspace_id=$(echo "${run}" | jq '.data."id"' | sed 's|\"||g')
           echo "INFO     | Workspace ID: ${workspace_id}."
+          echo "${tfc_api_url}/workspaces/${workspace_id}/vars"
           run=$(curl -sS -X Get -H "${auth_header}" -L "${tfc_api_url}/workspaces/${workspace_id}/vars")
           echo "${run}"
