@@ -22,6 +22,11 @@ on: # yamllint disable-line rule:truthy
         required: false
         type: string
         default: ConseilsTI
+      key:
+        description: Name of the variable to modify.
+        required: false
+        type: string
+        default: module_names
       value:
         description: Value of the variable to modify.
         required: true
@@ -32,7 +37,6 @@ jobs:
     name: Manage Terraform Module
     runs-on: ${{ github.event.inputs.runner }}
     env:
-      TFC_ORGANIZATION: ${{ github.event.inputs.tfc_organization }}
       TFC_API_TOKEN: ${{ secrets.TFC_API_TOKEN }}
     steps:
 
@@ -48,7 +52,7 @@ jobs:
           auth_header="Authorization: Bearer ${TFC_API_TOKEN}"
           content_header="Content-Type: application/vnd.api+json"
           echo "INFO     | Run API call to get workspace ID."
-          workspace_id=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/organizations/${TFC_ORGANIZATION}/workspaces/${workspace_name}" | jq '.data."id"' | sed 's|\"||g')
+          workspace_id=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/organizations/${{ github.event.inputs.tfc_organization }}/workspaces/${workspace_name}" | jq '.data."id"' | sed 's|\"||g')
           if [[ "${workspace_id}" != "null" ]]; then
             echo "INFO     | Workspace ID: ${workspace_id}."
           else
@@ -56,4 +60,4 @@ jobs:
             exit 1
           fi
           run=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/workspaces/${workspace_id}/vars")
-          echo "${run}"
+          id=$(echo "${run}" | jq .data[] | select(.attributes.key|test (${{ github.event.inputs.key }}) ) | .id)
