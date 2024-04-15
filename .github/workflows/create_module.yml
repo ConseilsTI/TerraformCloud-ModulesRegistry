@@ -1,13 +1,13 @@
 name: "Create Terraform Module"
 
-on:
+on: # yamllint disable-line rule:truthy
   workflow_dispatch:
     inputs:
       runner:
         description: Label of the runner to use.
         required: false
-        default: 'self-hosted'
         type: string
+        default: 'self-hosted'
       action:
         description: How to modify the variable value.
         required: true
@@ -19,6 +19,7 @@ on:
         default: append
       tfc_organization:
         description: The Terraform Cloud organization where the workspace resides.
+        required: false
         type: string
         default: ConseilsTI
       value:
@@ -40,7 +41,7 @@ jobs:
         run: |
           echo "INFO     | Build required variable."
           workspace_name=$(echo $EVENT_CONTEXT | jq ".repository.name" | sed 's|\"||g')
-          workspace_name=${workspace_name,,}
+          workspace_name="${workspace_name,,}"
           tfc_api_url="https://app.terraform.io/api/v2"
           auth_header="Authorization: Bearer ${TFC_API_TOKEN}"
           content_header="Content-Type: application/vnd.api+json"
