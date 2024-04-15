@@ -57,5 +57,5 @@ jobs:
           fi
           workspace_id=$(echo "${run}" | jq '.data."id"' | sed 's|\"||g')
           echo "INFO     | Workspace ID: ${workspace_id}."
-          run=$(curl -sS -H "${auth_header}" -H "${content_header}" -X Get -L "${tfc_api_url}/workspaces/${workspace_id}/vars")
+          run=$(curl -sS -H "${auth_header}" -H "${content_header}" -X Get -L "${tfc_api_url}/workspaces/${workspace_id}/vars?filter%5Borganization%5D%5Bname%5D=${TFC_ORGANIZATION}&filter%5Bworkspace%5D%5Bname%5D=${workspace_name}"")
           echo "${run}"
