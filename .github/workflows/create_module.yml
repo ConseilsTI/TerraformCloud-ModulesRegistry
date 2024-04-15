@@ -48,8 +48,7 @@ jobs:
           auth_header="Authorization: Bearer ${TFC_API_TOKEN}"
           content_header="Content-Type: application/vnd.api+json"
           echo "INFO     | Run API call to get workspace ID."
-          # workspace_id=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/organizations/${TFC_ORGANIZATION}/workspaces/${workspace_name}" | jq '.data."id"' | sed 's|\"||g')
-          workspace_id=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/organizations/${TFC_ORGANIZATION}/workspaces/TerraformCloud-ModuleRegistry" | jq '.data."id"' | sed 's|\"||g')
+          workspace_id=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/organizations/${TFC_ORGANIZATION}/workspaces/${workspace_name}" | jq '.data."id"' | sed 's|\"||g')
           if [[ -z "${workspace_id}" ]]; then
             echo "INFO     | Workspace ID: ${workspace_id}."
           else
