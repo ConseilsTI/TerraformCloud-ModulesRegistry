@@ -55,5 +55,5 @@ jobs:
             echo "${run}"
             exit 1
           fi
-          echo "INFO     | Workspace name: ${workspace_name}."
-          echo "${run}"
+          workspace_id=$(echo "${run}" | jq '.data."id"' | sed 's|\"||g')
+          echo "INFO     | Workspace ID: ${workspace_id}."
