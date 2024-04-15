@@ -1,4 +1,4 @@
-name: "Create Terraform Module"
+name: "Manage Terraform Module"
 
 on: # yamllint disable-line rule:truthy
   workflow_dispatch:
@@ -29,7 +29,7 @@ on: # yamllint disable-line rule:truthy
 
 jobs:
   job:
-    name: Create Terraform Module
+    name: Manage Terraform Module
     runs-on: ${{ github.event.inputs.runner }}
     env:
       TFC_ORGANIZATION: ${{ github.event.inputs.tfc_organization }}
@@ -54,7 +54,7 @@ jobs:
             echo "${run}"
             exit 1
           fi
-          workspace_id=$(echo "${run}" | jq '.data."id"' | sed 's|\"||g')
+          workspace_id=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/organizations/${TFC_ORGANIZATION}/workspaces/${workspace_name}" | jq '.data."id"' | sed 's|\"||g')
           echo "INFO     | Workspace ID: ${workspace_id}."
           echo "${tfc_api_url}/workspaces/${workspace_id}/vars"
           run=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/workspaces/${workspace_id}/vars")
