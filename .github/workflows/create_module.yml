@@ -30,8 +30,9 @@ on: # yamllint disable-line rule:truthy
 jobs:
   job:
     name: Create Terraform Module
-    runs-on: ${{ github.event.inputs.runner}}
+    runs-on: ${{ github.event.inputs.runner }}
     env:
+      TFC_ORGANIZATION: ${{ github.event.tfc_organization }}
       TFC_API_TOKEN: ${{ secrets.TFC_API_TOKEN }}
     steps:
 
@@ -48,10 +49,10 @@ jobs:
           content_header="Content-Type: application/vnd.api+json"
           echo "INFO     | Run API call to get workspace ID."
           echo "${tfc_api_url}"
-          echo "${env.tfc_organization}"
+          echo "${env.TFC_ORGANIZATION}"
           echo "${workspace_name}"
-          echo "${tfc_api_url}/organizations/${env.tfc_organization}/workspaces/${workspace_name}"
-          run=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/organizations/${env.tfc_organization}/workspaces/${workspace_name}")
+          echo "${tfc_api_url}/organizations/${env.TFC_ORGANIZATION}/workspaces/${workspace_name}"
+          run=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/organizations/${env.TFC_ORGANIZATION}/workspaces/${workspace_name}")
           if ! [[ ${run} =~ "{\"data\":" ]]; then
             echo "ERROR    | Unable to get workspace ID."
             echo "${run}"
