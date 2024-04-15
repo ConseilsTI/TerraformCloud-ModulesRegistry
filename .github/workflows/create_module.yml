@@ -24,14 +24,14 @@ jobs:
           EVENT_CONTEXT: ${{ toJSON(github.event) }}
         run: |
           echo "INFO     | Build required variable."
-          workspace_name=$(echo "${EVENT_CONTEXT}" | jq ".repository.name" | sed 's|\"||g')
+          workspace_name=$(echo "${EVENT_CONTEXT}" | jq -r ".repository.name")
           workspace_name="${workspace_name,,}"
           echo "INFO     | Workspace name: ${workspace_name}."
           tfc_api_url="https://app.terraform.io/api/v2"
           auth_header="Authorization: Bearer ${TFC_API_TOKEN}"
           content_header="Content-Type: application/vnd.api+json"
           echo "INFO     | Run API call to get workspace ID."
-          workspace_id=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/organizations/${{ env.TFC_ORGANIZATION }}/workspaces/${workspace_name}" | jq '.data."id"' | sed 's|\"||g')
+          workspace_id=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/organizations/${{ env.TFC_ORGANIZATION }}/workspaces/${workspace_name}" | jq -r '.data."id"')
           if [[ "${workspace_id}" != "null" ]]; then
             echo "INFO     | Workspace ID: ${workspace_id}"
             echo "workspace_id=${workspace_id}" >> $GITHUB_OUTPUT
@@ -48,10 +48,9 @@ jobs:
           auth_header="Authorization: Bearer ${TFC_API_TOKEN}"
           content_header="Content-Type: application/vnd.api+json"
           echo "INFO     | Run API call to get variable."
-          variable_id=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/workspaces/${{ steps.get_workspace_id.outputs.workspace_id }}/vars" | jq '.data[] | select(.attributes.key == "${{ env.TFC_VARIABLE }}" ) | .id' | sed 's|\"||g')
+          variable_id=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/workspaces/${{ steps.get_workspace_id.outputs.workspace_id }}/vars" | jq -r '.data[] | select(.attributes.key == "${{ env.TFC_VARIABLE }}" ) | .id')
           echo "${variable_id}"
-          variable_value=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/workspaces/${{ steps.get_workspace_id.outputs.workspace_id }}/vars" | jq '.data[] | select(.attributes.key == "${{ env.TFC_VARIABLE }}" ) | .attributes.value')
-          variable_value=${variable_value//^\"/}
+          variable_value=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/workspaces/${{ steps.get_workspace_id.outputs.workspace_id }}/vars" | jq -r '.data[] | select(.attributes.key == "${{ env.TFC_VARIABLE }}" ) | .attributes.value')
           echo "${variable_value}"
           if [[ "${variable_id}" != "null" && "${variable_value}" != "null" ]]; then
             echo "INFO     | Variable ID: ${variable_id}"
