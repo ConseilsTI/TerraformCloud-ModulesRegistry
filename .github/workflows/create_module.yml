@@ -42,6 +42,7 @@ jobs:
           echo "INFO     | Build required variable."
           workspace_name=$(echo "${EVENT_CONTEXT}" | jq ".repository.name" | sed 's|\"||g')
           workspace_name="${workspace_name,,}"
+          echo "INFO     | Workspace name: ${workspace_name}."
           tfc_api_url="https://app.terraform.io/api/v2"
           auth_header="Authorization: Bearer ${TFC_API_TOKEN}"
           content_header="Content-Type: application/vnd.api+json"
