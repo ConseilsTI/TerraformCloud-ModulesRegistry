@@ -7,7 +7,7 @@ on: # yamllint disable-line rule:truthy
         description: Label of the runner to use.
         required: false
         type: string
-        default: 'self-hosted'
+        default: 'ubuntu-latest'
       action:
         description: How to modify the variable value.
         required: true
@@ -28,8 +28,8 @@ on: # yamllint disable-line rule:truthy
         type: string
 
 jobs:
-  terraform-unlock:
-    name: Terraform Unlock
+  job:
+    name: Create Terraform Module
     runs-on: ${{ github.event.inputs.runner}}
     env:
       TFC_API_TOKEN: ${{ secrets.TFC_API_TOKEN }}
@@ -46,7 +46,7 @@ jobs:
           auth_header="Authorization: Bearer ${TFC_API_TOKEN}"
           content_header="Content-Type: application/vnd.api+json"
           echo "INFO     | Run API call to get workspace ID."
-          run=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/organizations/${end.tfc_organization}/workspaces/${workspace_name}")
+          run=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/organizations/${env.tfc_organization}/workspaces/${workspace_name}")
           if ! [[ ${run} =~ "{\"data\":" ]]; then
             echo "ERROR    | Unable to get workspace ID."
             echo "${run}"
