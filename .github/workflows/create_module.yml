@@ -55,7 +55,7 @@ jobs:
           echo "INFO     | Run API call to get workspace ID."
           workspace_id=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/organizations/${{ github.event.inputs.tfc_organization }}/workspaces/${workspace_name}" | jq '.data."id"' | sed 's|\"||g')
           if [[ "${workspace_id}" != "null" ]]; then
-            echo "INFO     | Workspace ID: ${workspace_id}."
+            echo "INFO     | Workspace ID: ${workspace_id}"
             echo "workspace_id=${workspace_id}" >> $GITHUB_OUTPUT
           else
             echo "ERROR    | Unable to get workspace ID."
@@ -76,7 +76,7 @@ jobs:
           variable_id=$(echo "${run}" | jq '.data[] | select(.attributes.key|test ("${{ github.event.inputs.key }}") ) | .id')
           echo "${variable_id}"
           if [[ "${variable_id}" != "null" ]]; then
-            echo "INFO     | Variable ID: ${variable_id}."
+            echo "INFO     | Variable ID: ${variable_id}"
             echo " variable_id=${variable_id}" >> $GITHUB_OUTPUT
           else
             echo "ERROR    | Unable to get variable ID."

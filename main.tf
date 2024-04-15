@@ -17,7 +17,7 @@ data "github_team" "this" {
 # The following code block is used to create GitHub repository.
 
 resource "github_repository" "this" {
-  for_each               = toset(var.modules_name)
+  for_each               = toset(var.module_names)
   name                   = lower(each.value)
   description            = "Terraform module to manage ${element(split("-", each.value), 1)} resources."
   visibility             = "public"
@@ -123,7 +123,7 @@ resource "tfe_registry_module" "this" {
 }
 
 locals {
-  github_modules = flatten([for module in var.modules_name :
+  github_modules = flatten([for module in var.module_names :
     flatten([for variable in var.github_enviromnent_variables :
       merge(
         variable,

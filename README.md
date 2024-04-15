@@ -89,9 +89,9 @@ No modules.
 
 The following input variables are required:
 
-### <a name="input_modules_name"></a> [modules\_name](#input\_modules\_name)
+### <a name="input_module_names"></a> [module\_names](#input\_module\_names)
 
-Description: (Required) A list of modules name to published.
+Description: (Required) A list of module names to published.
 
 Type: `list(string)`
 

@@ -1,5 +1,5 @@
-variable "modules_name" {
-  description = "(Required) A list of modules name to published."
+variable "module_names" {
+  description = "(Required) A list of module names to published."
   type        = list(string)
   validation {
     condition     = alltrue([for module_name in var.modules_name : can(regex("^terraform-[a-zA-Z]+-[a-zA-Z0-9--]+$", module_name))]) ? true : false
