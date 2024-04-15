@@ -1,43 +1,21 @@
-name: "Manage Terraform Module"
+name: "Create Terraform Module"
 
 on: # yamllint disable-line rule:truthy
   workflow_dispatch:
     inputs:
-      runner:
-        description: Label of the runner to use.
-        required: false
-        type: string
-        default: 'ubuntu-latest'
-      action:
-        description: How to modify the variable value.
-        required: true
-        type: choice
-        options:
-          - append
-          - remove
-          - replace
-        default: append
-      tfc_organization:
-        description: The Terraform Cloud organization where the workspace resides.
-        required: false
-        type: string
-        default: ConseilsTI
-      key:
-        description: Name of the variable to modify.
-        required: false
-        type: string
-        default: module_names
-      value:
-        description: Value of the variable to modify.
+      module_name:
+        description: The name of the module to create. Module name must use a three-part name format like `terraform-<PROVIDER>-<NAME>` and contain only alphanumeric and hypens.
         required: true
         type: string
 
 jobs:
   job:
     name: Manage Terraform Module
-    runs-on: ${{ github.event.inputs.runner }}
+    runs-on: ubuntu-latest
     env:
       TFC_API_TOKEN: ${{ secrets.TFC_API_TOKEN }}
+      TFC_ORGANIZATION: ConseilsTI
+      TFC_VARIABLE: module_names
     steps:
 
       - name: Get workspace ID
@@ -53,7 +31,7 @@ jobs:
           auth_header="Authorization: Bearer ${TFC_API_TOKEN}"
           content_header="Content-Type: application/vnd.api+json"
           echo "INFO     | Run API call to get workspace ID."
-          workspace_id=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/organizations/${{ github.event.inputs.tfc_organization }}/workspaces/${workspace_name}" | jq '.data."id"' | sed 's|\"||g')
+          workspace_id=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/organizations/${{ env.TFC_ORGANIZATION }}/workspaces/${workspace_name}" | jq '.data."id"' | sed 's|\"||g')
           if [[ "${workspace_id}" != "null" ]]; then
             echo "INFO     | Workspace ID: ${workspace_id}"
             echo "workspace_id=${workspace_id}" >> $GITHUB_OUTPUT
@@ -62,21 +40,29 @@ jobs:
             exit 1
           fi
 
-      - name: Get variable ID
-        id: get_variable_id
-        env:
-          EVENT_CONTEXT: ${{ toJSON(github.event) }}
+      - name: Get variable
+        id: get_variable
         run: |
           echo "INFO     | Build required variable."
           tfc_api_url="https://app.terraform.io/api/v2"
           auth_header="Authorization: Bearer ${TFC_API_TOKEN}"
           content_header="Content-Type: application/vnd.api+json"
-          echo "INFO     | Run API call to get variable ID."
-          variable_id=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/workspaces/${{ steps.get_workspace_id.outputs.workspace_id }}/vars" | jq '.data[] | select(.attributes.key == "${{ github.event.inputs.key }}" ) | .id' | sed 's|\"||g')
-          if [[ "${variable_id}" != "null" ]]; then
+          echo "INFO     | Run API call to get variable."
+          variable_id=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/workspaces/${{ steps.get_workspace_id.outputs.workspace_id }}/vars" | jq '.data[] | select(.attributes.key == "${{ env.TFC_VARIABLE }}" ) | .id' | sed 's|\"||g')
+          variable_value=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/workspaces/${{ steps.get_workspace_id.outputs.workspace_id }}/vars" | jq '.data[] | select(.attributes.key == "${{ env.TFC_VARIABLE }}" ) | .value' | sed 's|\"||g')
+          if [[ "${variable_id}" != "null" && "${variable_value}" != "null" ]]; then
             echo "INFO     | Variable ID: ${variable_id}"
             echo " variable_id=${variable_id}" >> $GITHUB_OUTPUT
+            echo "INFO     | Variable value: ${variable_value}"
+            echo " variable_value=${variable_value}" >> $GITHUB_OUTPUT
           else
-            echo "ERROR    | Unable to get variable ID."
+            echo "ERROR    | Unable to get variable."
             exit 1
           fi
+
+      - name: Modify variable
+        run: |
+          echo "INFO     | Build required variable."
+          tfc_api_url="https://app.terraform.io/api/v2"
+          auth_header="Authorization: Bearer ${TFC_API_TOKEN}"
+          content_header="Content-Type: application/vnd.api+json"
