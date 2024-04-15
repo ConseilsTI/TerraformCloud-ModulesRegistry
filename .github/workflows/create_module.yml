@@ -48,6 +48,6 @@ jobs:
           run=$(curl -sS -H "${auth_header}" -H ${content_header} -L "${tfc_api_url}/organizations/${end.tfc_organization}/workspaces/${workspace_name}")
           if ! [[ ${run} =~ "{\"data\":" ]]; then
             echo "ERROR    | Unable to get workspace ID."
-            echo "${run}""
+            echo "${run}"
             exit 1
           fi
