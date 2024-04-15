@@ -1,0 +1,53 @@
+name: "Create Terraform Module"
+
+on:
+  workflow_dispatch:
+    inputs:
+      runner:
+        description: Label of the runner to use.
+        required: false
+        default: 'self-hosted'
+        type: string
+      action:
+        description: How to modify the variable value.
+        required: true
+        type: choice
+        options:
+          - append
+          - remove
+          - replace
+        default: append
+      tfc_organization:
+        description: The Terraform Cloud organization where the workspace resides.
+        type: string
+        default: ConseilsTI
+      value:
+        description: Value of the variable to modify.
+        required: true
+        type: string
+
+jobs:
+  terraform-unlock:
+    name: Terraform Unlock
+    runs-on: ${{ github.event.inputs.runner}}
+    env:
+      TFC_API_TOKEN: ${{ secrets.TFC_API_TOKEN }}
+    steps:
+
+      - name: List Terraform Cloud Variables
+        env:
+          EVENT_CONTEXT: ${{ toJSON(github.event) }}
+        run: |
+          echo "INFO     | Build required variable."
+          workspace_name=$(echo $EVENT_CONTEXT | jq ".repository.name" | sed 's|\"||g')
+          workspace_name=${workspace_name,,}
+          tfc_api_url="https://app.terraform.io/api/v2"
+          auth_header="Authorization: Bearer ${TFC_API_TOKEN}"
+          content_header="Content-Type: application/vnd.api+json"
+          echo "INFO     | Run API call to get workspace ID."
+          run=$(curl -sS -H "${auth_header}" -H ${content_header} -L "${tfc_api_url}/organizations/${end.tfc_organization}/workspaces/${workspace_name}")
+          if ! [[ ${run} =~ "{\"data\":" ]]; then
+            echo "ERROR    | Unable to get workspace ID."
+            echo "${run}""
+            exit 1
+          fi
