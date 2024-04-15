@@ -40,7 +40,8 @@ jobs:
       TFC_API_TOKEN: ${{ secrets.TFC_API_TOKEN }}
     steps:
 
-      - name: List Terraform Cloud Variables
+      - name: Get workspace ID
+        id: get_workspace_id
         env:
           EVENT_CONTEXT: ${{ toJSON(github.event) }}
         run: |
@@ -55,9 +56,21 @@ jobs:
           workspace_id=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/organizations/${{ github.event.inputs.tfc_organization }}/workspaces/${workspace_name}" | jq '.data."id"' | sed 's|\"||g')
           if [[ "${workspace_id}" != "null" ]]; then
             echo "INFO     | Workspace ID: ${workspace_id}."
+            echo "workspace_id=${workspace_id}" >> $GITHUB_OUTPUT
           else
             echo "ERROR    | Unable to get workspace ID."
             exit 1
           fi
-          run=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/workspaces/${workspace_id}/vars")
-          id=$(echo "${run}" | jq .data[] | select(.attributes.key|test (${{ github.event.inputs.key }}) ) | .id)
+
+      - name: Get variable ID
+        id: get_variable_id
+        env:
+          EVENT_CONTEXT: ${{ toJSON(github.event) }}
+        run: |
+          echo "INFO     | Build required variable."
+          tfc_api_url="https://app.terraform.io/api/v2"
+          auth_header="Authorization: Bearer ${TFC_API_TOKEN}"
+          content_header="Content-Type: application/vnd.api+json"
+          echo "INFO     | Run API call to get variable ID."
+          run=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/workspaces/${{ steps.get_workspace_id.outputs.workspace_id }}/vars")
+          id=$(echo "${run}" | jq '.data[] | select(.attributes.key|test (${{ github.event.inputs.key }}) ) | .id')
