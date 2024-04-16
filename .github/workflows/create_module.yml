@@ -86,7 +86,7 @@ jobs:
             echo "ERROR    | Variable is not an array."
             exit 1
           fi
-          if ! [[ "${variable_value}" =~ "${{ github.event.inputs.module_name }}" ]]; then
+          if [[ "${variable_value}" =~ "${{ github.event.inputs.module_name }}" ]]; then
             echo "ERROR    | Module's name is already in use."
             exit 1
           fi
