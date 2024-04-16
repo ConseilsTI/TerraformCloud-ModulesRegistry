@@ -50,8 +50,13 @@ jobs:
           auth_header="Authorization: Bearer ${TF_API_TOKEN}"
           content_header="Content-Type: application/vnd.api+json"
           echo "INFO     | Run API call to get variable."
-          variable_id=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/workspaces/${{ steps.get_workspace_id.outputs.workspace_id }}/vars" | jq -r '.data[] | select(.attributes.key == "${{ env.TF_VARIABLE }}" ) | .id')
-          variable_value=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/workspaces/${{ steps.get_workspace_id.outputs.workspace_id }}/vars" | jq -r '.data[] | select(.attributes.key == "${{ env.TF_VARIABLE }}" ) | .attributes.value')
+          run=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/workspaces/${{ steps.get_workspace_id.outputs.workspace_id }}/vars")
+          if ! [[ "${run}" =~ "{\"data\":" ]]; then
+            echo "${run}"
+            exit 1
+          fi
+          variable_id=$(echo "${run}" | jq -r '.data[] | select(.attributes.key == "${{ env.TF_VARIABLE }}" ) | .id')
+          variable_value=$(echo "${run}" | jq -r '.data[] | select(.attributes.key == "${{ env.TF_VARIABLE }}" ) | .attributes.value')
           if [[ "${variable_id}" != "null" && "${variable_value}" != "null" ]]; then
             echo "INFO     | Variable ID: ${variable_id}"
             echo "variable_id=${variable_id}" >> $GITHUB_OUTPUT
@@ -69,9 +74,9 @@ jobs:
           auth_header="Authorization: Bearer ${TF_API_TOKEN}"
           content_header="Content-Type: application/vnd.api+json"
           variable_value="${{ steps.get_variable.outputs.variable_value }}"
+          
+          if [[ "${variable_value}" =~ [[a-zA-Z0-9\s,-]]+ ]]; then
           variable_value="${variable_value::-1}, ${{ github.event.inputs.module_name }}]"
-          if [[ "${variable_value}" =~ ^\[[a-zA-Z0-9-,\s]+]$ ]]; then
-            echo "match"
           else
             echo "not match"
           fi
