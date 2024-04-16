@@ -57,13 +57,13 @@ jobs:
             exit 1
           fi
           variable_id=$(echo "${run}" | jq '.data[] | select(.attributes.key == "${{ env.TF_VARIABLE }}" ) | .id')
-          echho -e "${variable_id}"
+          echo "${variable_id}"
           variable_value=$(echo "${run}" | jq '.data[] | select(.attributes.key == "${{ env.TF_VARIABLE }}" ) | .attributes.value')
-          echho -e "${variable_value}"
+          echo "${variable_value}"
           variable_id=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/workspaces/${{ steps.get_workspace_id.outputs.workspace_id }}/vars" | jq '.data[] | select(.attributes.key == "${{ env.TF_VARIABLE }}" ) | .id')
-          echho -e "${variable_id}"
+          echo "${variable_id}"
           variable_value=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/workspaces/${{ steps.get_workspace_id.outputs.workspace_id }}/vars" | jq '.data[] | select(.attributes.key == "${{ env.TF_VARIABLE }}" ) | .attributes.value')
-          echho -e "${variable_value}"
+          echo "${variable_value}"
           if [[ "${variable_id}" != "null" && "${variable_value}" != "null" ]]; then
             echo "INFO     | Variable ID: ${variable_id}"
             echo "variable_id=${variable_id}" >> $GITHUB_OUTPUT
