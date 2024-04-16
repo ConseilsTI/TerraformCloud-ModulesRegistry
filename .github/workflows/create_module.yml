@@ -96,7 +96,7 @@ jobs:
           json_string='{"data":{"id":"'"${{ steps.get_variable.outputs.variable_id }}"'","attributes":{"value":"'"${variable_value}"'"},"type":"vars"}}'
           json_payload=$(echo "${json_string}" | jq)
           echo "${json_payload}"
-          echo "INFO     | Run API call to update variable."
+          echo "INFO     | Running API call to update variable."
           {
             run=$(curl -sS --request PATCH --url "${tfc_api_url}/vars/${{ steps.get_variable.outputs.variable_id }}" \
             --header "${auth_header}" --header "${content_header}" --data "${json_payload}")
@@ -104,6 +104,8 @@ jobs:
               echo "ERROR    | Unable to update variable."
               echo "${run}"
               exit 1
+            else
+              echo "INFO     | Variable updated."
             fi
           } ||
           {
@@ -111,16 +113,16 @@ jobs:
             exit 1
           }
 
-      # - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      # - uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.2.0
-      #   id: upload
-      #   with:
-      #     workspace: ${{ steps.get_workspace_id.outputs.workspace_name }}
-      #     directory: ./
+      - uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.2.0
+        id: upload
+        with:
+          workspace: ${{ steps.get_workspace_id.outputs.workspace_name }}
+          directory: ./
 
-      # - uses: hashicorp/tfc-workflows-github/actions/create-run@v1.2.0
-      #   id: create-run
-      #   with:
-      #     workspace: ${{ steps.get_workspace_id.outputs.workspace_name }}
-      #     configuration_version: ${{ steps.upload.outputs.configuration_version_id }}
+      - uses: hashicorp/tfc-workflows-github/actions/create-run@v1.2.0
+        id: create-run
+        with:
+          workspace: ${{ steps.get_workspace_id.outputs.workspace_name }}
+          configuration_version: ${{ steps.upload.outputs.configuration_version_id }}
