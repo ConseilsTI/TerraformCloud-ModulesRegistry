@@ -50,6 +50,7 @@ jobs:
           auth_header="Authorization: Bearer ${TF_API_TOKEN}"
           content_header="Content-Type: application/vnd.api+json"
           echo "INFO     | Run API call to get variable."
+          curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/workspaces/${{ steps.get_workspace_id.outputs.workspace_id }}/vars"
           variable_id=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/workspaces/${{ steps.get_workspace_id.outputs.workspace_id }}/vars" | jq -r '.data[] | select(.attributes.key == "${{ env.TF_VARIABLE }}" ) | .id')
           variable_value=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/workspaces/${{ steps.get_workspace_id.outputs.workspace_id }}/vars" | jq '.data[] | select(.attributes.key == "${{ env.TF_VARIABLE }}" ) | .attributes.value')
           if [[ "${variable_id}" != "null" && "${variable_value}" != "null" ]]; then
