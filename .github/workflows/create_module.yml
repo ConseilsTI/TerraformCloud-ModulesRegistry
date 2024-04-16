@@ -1,3 +1,29 @@
+# This workflow runs manually.
+#
+# `Create Terraform Module` job run Terraform Cloud API call to retrieve the workspace id.
+# It then uses API calls to find the variable ID and value. After several validations, it
+# updates the variable in Terraform Cloud using an API call.
+#
+# Finally, it uses `checkout` to download the content of the repository. It runs
+# `hashicorp/tfc-workflows-github/actions/upload-configuration` to creates a configuration version
+# and uploads the directory containing files for a specified Terraform Cloud Workspace. Then, it
+# performs an API driven run in Terraform Cloud, using a configuration version and the workspace's
+# current variables.
+#
+# Documentation
+# - https://github.com/actions/checkout
+# - https://github.com/hashicorp/tfc-workflows-github/tree/main/actions/upload-configuration
+# - https://github.com/hashicorp/tfc-workflows-github/tree/main/actions/create-run
+#
+# Prerequisites:
+# - A Terraform Cloud workspace
+# - A Terraform Cloud API token with required permissions
+#
+# Terraform Cloud user API token stored as a GitHub secret (e.g. TF_API_TOKEN) in the repository.
+#   Documentation:
+#     - https://www.terraform.io/docs/cloud/users-teams-organizations/api-tokens.html
+#     - https://help.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets
+
 name: "Create Terraform Module"
 
 on: # yamllint disable-line rule:truthy
