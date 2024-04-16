@@ -87,7 +87,7 @@ jobs:
             exit 1
           fi
           if ! [[ "${variable_value}" =~ "${{ github.event.inputs.module_name }}" ]]; then
-            echo "ERROR    | Module's name is already in use.
+            echo "ERROR    | Module's name is already in use."
             exit 1
           fi
           echo "INFO     | Adding new module's name into the array."
