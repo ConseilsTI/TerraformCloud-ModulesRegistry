@@ -82,35 +82,34 @@ jobs:
           fi
           if [[ "${variable_value}" =~ ^\[.*\]$ ]]; then
             echo "INFO     | Variable is an array."
-            echo "INFO     | Adding new module's name into the array."
-            variable_value="${variable_value::-1}, \"${{ github.event.inputs.module_name }}\"]"
-            echo "${variable_value}"
-            echo "INFO     | Converting \\\" into \\\\\"."
-            variable_value=${variable_value//\"/\\\"}
-            echo "${variable_value}"
-            echo "INFO     | Building JSON payload."
-            json_string='{"data":{"id":"'"${{ steps.get_variable.outputs.variable_id }}"'","attributes":{"value":"'"${variable_value}"'"},"type":"vars"}}'
-            json_payload=$(echo "${json_string}" | jq)
-            echo "${json_payload}"
           else
             echo "ERROR    | Variable is not an array."
             exit 1
-          fi
-          
-          # echo "INFO     | Run API call to update variable."
-          # {
-          #   run=$(curl -sS --request PATCH --url "${tfc_api_url}/vars/${{ steps.get_variable.outputs.variable_id }}" \
-          #   --header "${auth_header}" --header "${content_header}" --data "${json_payload}")
-          #   if ! [[ "${run}" =~ "{\"data\":" ]]; then
-          #     echo "ERROR    | Unable to update variable."
-          #     echo "${run}"
-          #     exit 1
-          #   fi
-          # } ||
-          # {
-          #   echo "ERROR    | Unable to update variable."
-          #   exit 1
-          # }
+          fi          
+          echo "INFO     | Adding new module's name into the array."
+          variable_value="${variable_value::-1}, \"${{ github.event.inputs.module_name }}\"]"
+          echo "${variable_value}"
+          echo "INFO     | Converting \\\" into \\\\\"."
+          variable_value=${variable_value//\"/\\\"}
+          echo "${variable_value}"
+          echo "INFO     | Building JSON payload."
+          json_string='{"data":{"id":"'"${{ steps.get_variable.outputs.variable_id }}"'","attributes":{"value":"'"${variable_value}"'"},"type":"vars"}}'
+          json_payload=$(echo "${json_string}" | jq)
+          echo "${json_payload}"
+          echo "INFO     | Run API call to update variable."
+          {
+            run=$(curl -sS --request PATCH --url "${tfc_api_url}/vars/${{ steps.get_variable.outputs.variable_id }}" \
+            --header "${auth_header}" --header "${content_header}" --data "${json_payload}")
+            if ! [[ "${run}" =~ "{\"data\":" ]]; then
+              echo "ERROR    | Unable to update variable."
+              echo "${run}"
+              exit 1
+            fi
+          } ||
+          {
+            echo "ERROR    | Unable to update variable."
+            exit 1
+          }
 
       # - uses: actions/checkout@v4
 
