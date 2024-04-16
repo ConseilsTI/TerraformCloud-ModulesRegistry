@@ -72,10 +72,9 @@ jobs:
           echo "INFO     | Build JSON payload."
           json_string='{"data":{"id":"'"${{ steps.get_variable.outputs.variable_id }}"'","attributes":{"value":"'"${variable_value}"'"},"type":"vars"}}'
           json_payload=$(echo "${json_string}" | jq)
-          echo "${json_payload}"
           echo "INFO     | Run API call to update variable."
           {
-            run=$(curl --request PATCH --url "${tfc_api_url}/vars/${{ steps.get_variable.outputs.variable_id }}" \
+            run=$(curl -sS --request PATCH --url "${tfc_api_url}/vars/${{ steps.get_variable.outputs.variable_id }}" \
             --header "${auth_header}" --header "${content_header}" --data "${json_payload}")
             if ! [[ "${run}" =~ "{\"data\":" ]]; then
               echo "ERROR    | Unable to update variable."
