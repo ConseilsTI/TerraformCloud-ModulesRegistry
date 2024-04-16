@@ -68,3 +68,5 @@ jobs:
           content_header="Content-Type: application/vnd.api+json"
           variable_value="${{ steps.get_variable.outputs.variable_value }}"
           echo "${variable_value::-1}"
+          variable_value="${variable_value::-1}, ${{ github.event.inputs.module_name }} ]"
+          echo "${variable_value}"
