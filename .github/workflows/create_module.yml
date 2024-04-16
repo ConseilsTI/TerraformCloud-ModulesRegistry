@@ -77,7 +77,7 @@ jobs:
           if [[ "${{ github.event.inputs.module_name }}" =~ ^terraform-[a-zA-Z]+-[a-zA-Z0-9-]+$ ]]; then
             echo "INFO     | Module's name use a three-part name format like \"terraform-<PROVIDER>-<NAME>\" and contain only alphanumeric and hypens."
           else
-            echo "ERROR    | Module name must use a three-part name format like \"terraform-<PROVIDER>-<NAME>\" and contain only alphanumeric and hypens."
+            echo "ERROR    | Module's name must use a three-part name format like \"terraform-<PROVIDER>-<NAME>\" and contain only alphanumeric and hypens."
             exit 1
           fi
           if [[ "${variable_value}" =~ ^\[.*\]$ ]]; then
@@ -93,12 +93,12 @@ jobs:
             exit 1
           fi
           
-          echo "${variable_value}"
-          echo "INFO     | Build JSON payload."
-          json_string='{"data":{"id":"'"${{ steps.get_variable.outputs.variable_id }}"'","attributes":{"value":"'"${variable_value}"'"},"type":"vars"}}'
-          json_payload=$(echo "${json_string}" | jq)
-          echo "${json_payload}"
-          echo "INFO     | Run API call to update variable."
+          # echo "${variable_value}"
+          # echo "INFO     | Build JSON payload."
+          # json_string='{"data":{"id":"'"${{ steps.get_variable.outputs.variable_id }}"'","attributes":{"value":"'"${variable_value}"'"},"type":"vars"}}'
+          # json_payload=$(echo "${json_string}" | jq)
+          # echo "${json_payload}"
+          # echo "INFO     | Run API call to update variable."
           # {
           #   run=$(curl -sS --request PATCH --url "${tfc_api_url}/vars/${{ steps.get_variable.outputs.variable_id }}" \
           #   --header "${auth_header}" --header "${content_header}" --data "${json_payload}")
