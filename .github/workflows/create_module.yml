@@ -70,6 +70,7 @@ jobs:
           content_header="Content-Type: application/vnd.api+json"
           variable_value="${{ steps.get_variable.outputs.variable_value }}"
           variable_value="${variable_value::-1}, ${{ github.event.inputs.module_name }}]"
+          echo "${variable_value}"
           echo "INFO     | Build JSON payload."
           json_string='{"data":{"id":"'"${{ steps.get_variable.outputs.variable_id }}"'","attributes":{"value":"'"${variable_value}"'"},"type":"vars"}}'
           json_payload=$(echo "${json_string}" | jq)
