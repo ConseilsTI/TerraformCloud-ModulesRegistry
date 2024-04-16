@@ -190,10 +190,6 @@ The following resources are used by this module:
 
 The following outputs are exported:
 
-### <a name="output_branch_protection"></a> [branch\_protection](#output\_branch\_protection)
-
-Description: GitHub branch protection within your GitHub repository.
-
 ### <a name="output_full_name"></a> [full\_name](#output\_full\_name)
 
 Description: A string of the form "orgname/reponame".

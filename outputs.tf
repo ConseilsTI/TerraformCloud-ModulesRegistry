@@ -47,8 +47,3 @@ output "primary_language" {
   description = "The primary language used in the repository."
   value       = { for github_repository in github_repository.this : github_repository.name => github_repository.primary_language }
 }
-
-output "branch_protection" {
-  description = "GitHub branch protection within your GitHub repository."
-  value       = { for branch_protection in github_branch_protection.this : branch_protection.pattern => branch_protection }
-}
