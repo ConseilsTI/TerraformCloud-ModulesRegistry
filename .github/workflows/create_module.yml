@@ -51,6 +51,7 @@ jobs:
           content_header="Content-Type: application/vnd.api+json"
           echo "INFO     | Run API call to get variable."
           run=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/workspaces/${{ steps.get_workspace_id.outputs.workspace_id }}/vars")
+          echo "${run}"
           if ! [[ "${run}" =~ "{\"data\":" ]]; then
             echo "${run}"
             exit 1
