@@ -1,3 +1,29 @@
+# This workflow runs manually.
+#
+# `Create Terraform Module` job run Terraform Cloud API call to retrieve the workspace id.
+# It then uses API calls to find the variable ID and value. After several validations, it
+# updates the variable in Terraform Cloud using an API call.
+#
+# Finally, it uses `checkout` to download the content of the repository. It runs
+# `hashicorp/tfc-workflows-github/actions/upload-configuration` to creates a configuration version
+# and uploads the directory containing files for a specified Terraform Cloud Workspace. Then, it
+# performs an API driven run in Terraform Cloud, using a configuration version and the workspace's
+# current variables.
+#
+# Documentation
+# - https://github.com/actions/checkout
+# - https://github.com/hashicorp/tfc-workflows-github/tree/main/actions/upload-configuration
+# - https://github.com/hashicorp/tfc-workflows-github/tree/main/actions/create-run
+#
+# Prerequisites:
+# - A Terraform Cloud workspace
+# - A Terraform Cloud API token with required permissions
+#
+# Terraform Cloud user API token stored as a GitHub secret (e.g. TF_API_TOKEN) in the repository.
+#   Documentation:
+#     - https://www.terraform.io/docs/cloud/users-teams-organizations/api-tokens.html
+#     - https://help.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets
+
 name: "Create Terraform Module"
 
 on: # yamllint disable-line rule:truthy
@@ -26,7 +52,7 @@ jobs:
           echo "INFO     | Building required variables."
           workspace_name=$(echo "${EVENT_CONTEXT}" | jq -r ".repository.name")
           workspace_name="${workspace_name,,}"
-          echo "workspace_name=${workspace_name}" >> $GITHUB_OUTPUT
+          echo "workspace_name=${workspace_name}" >> "${GITHUB_OUTPUT}"
           echo "INFO     | Workspace name: ${workspace_name}"
           tfc_api_url="https://app.terraform.io/api/v2"
           auth_header="Authorization: Bearer ${TF_API_TOKEN}"
@@ -35,7 +61,7 @@ jobs:
           workspace_id=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/organizations/${{ env.TF_CLOUD_ORGANIZATION }}/workspaces/${workspace_name}" | jq -r '.data."id"')
           if [[ "${workspace_id}" != "null" ]]; then
             echo "INFO     | Workspace ID: ${workspace_id}"
-            echo "workspace_id=${workspace_id}" >> $GITHUB_OUTPUT
+            echo "workspace_id=${workspace_id}" >> "${GITHUB_OUTPUT}"
           else
             echo "ERROR    | Unable to get workspace ID."
             exit 1
@@ -52,16 +78,16 @@ jobs:
           variable_id=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/workspaces/${{ steps.get_workspace_id.outputs.workspace_id }}/vars" | jq '.data[] | select(.attributes.key == "${{ env.TF_VARIABLE }}" ) | .id')
           if [[ "${variable_id}" != "null" ]]; then
             echo "INFO     | Variable ID: ${variable_id}"
-            echo "variable_id=${variable_id}" >> $GITHUB_OUTPUT
+            echo "variable_id=${variable_id}" >> "${GITHUB_OUTPUT}"
           else
             echo "ERROR    | Unable to get variable id."
             exit 1
-          fi          
+          fi
           echo "INFO     | Running API call to get variable value."
           variable_value=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/workspaces/${{ steps.get_workspace_id.outputs.workspace_id }}/vars" | jq '.data[] | select(.attributes.key == "${{ env.TF_VARIABLE }}" ) | .attributes.value')
           if [[ "${variable_value}" != "null" ]]; then
             echo "INFO     | Variable value: ${variable_value}"
-            echo "variable_value=${variable_value}" >> $GITHUB_OUTPUT
+            echo "variable_value=${variable_value}" >> "${GITHUB_OUTPUT}"
           else
             echo "ERROR    | Unable to get variable value."
             exit 1
@@ -92,7 +118,7 @@ jobs:
           fi
           echo "INFO     | Adding new module's name into the array."
           variable_value="${variable_value::-1}, \"${{ github.event.inputs.module_name }}\"]"
-          echo "INFO     | Converting \\\" into \\\\\"."
+          printf 'INFO     | Converting \\" into \\\\".'
           variable_value=${variable_value//\"/\\\"}
           echo "INFO     | Building JSON payload."
           json_string='{"data":{"id":"'"${{ steps.get_variable.outputs.variable_id }}"'","attributes":{"value":"'"${variable_value}"'"},"type":"vars"}}'
