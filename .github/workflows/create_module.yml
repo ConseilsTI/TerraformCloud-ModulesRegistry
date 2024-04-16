@@ -82,9 +82,9 @@ jobs:
           fi
           if [[ "${variable_value}" =~ ^\[.*\]$ ]]; then
             echo "INFO     | Variable is an array."
-          #   echo "INFO     | Adding new module's name into the array."
-          #   variable_value="${variable_value::-1}, \"${{ github.event.inputs.module_name }}\"]"
-          #   echo "${variable_value}"
+            echo "INFO     | Adding new module's name into the array."
+            variable_value="${variable_value::-1}, \"${{ github.event.inputs.module_name }}\"]"
+            echo "${variable_value}"
           #   echo "INFO     | Converting \\\" into \\\\"."
           #   variable_value=${variable_value//\"/\\\"}
           #   echo "${variable_value}"
