@@ -23,14 +23,14 @@ jobs:
         env:
           EVENT_CONTEXT: ${{ toJSON(github.event) }}
         run: |
-          echo "INFO     | Build required variable."
+          echo "INFO     | Building required variables."
           workspace_name=$(echo "${EVENT_CONTEXT}" | jq -r ".repository.name")
           workspace_name="${workspace_name,,}"
-          echo "INFO     | Workspace name: ${workspace_name}."
+          echo "INFO     | Workspace name: ${workspace_name}"
           tfc_api_url="https://app.terraform.io/api/v2"
           auth_header="Authorization: Bearer ${TF_API_TOKEN}"
           content_header="Content-Type: application/vnd.api+json"
-          echo "INFO     | Run API call to get workspace ID."
+          echo "INFO     | Running API call to get workspace ID."
           workspace_id=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/organizations/${{ env.TF_CLOUD_ORGANIZATION }}/workspaces/${workspace_name}" | jq -r '.data."id"')
           if [[ "${workspace_id}" != "null" ]]; then
             echo "INFO     | Workspace name: ${workspace_name}"
@@ -45,12 +45,13 @@ jobs:
       - name: Get variable
         id: get_variable
         run: |
-          echo "INFO     | Build required variable."
+          echo "INFO     | Building required variables."
           tfc_api_url="https://app.terraform.io/api/v2"
           auth_header="Authorization: Bearer ${TF_API_TOKEN}"
           content_header="Content-Type: application/vnd.api+json"
-          echo "INFO     | Run API call to get variable."
+          echo "INFO     | Running API call to get variable id."
           variable_id=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/workspaces/${{ steps.get_workspace_id.outputs.workspace_id }}/vars" | jq '.data[] | select(.attributes.key == "${{ env.TF_VARIABLE }}" ) | .id')
+          echo "INFO     | Running API call to get variable value."
           variable_value=$(curl -sS -H "${auth_header}" -H "${content_header}" -L "${tfc_api_url}/workspaces/${{ steps.get_workspace_id.outputs.workspace_id }}/vars" | jq '.data[] | select(.attributes.key == "${{ env.TF_VARIABLE }}" ) | .attributes.value')
           if [[ "${variable_id}" != "null" && "${variable_value}" != "null" ]]; then
             echo "INFO     | Variable ID: ${variable_id}"
@@ -58,25 +59,34 @@ jobs:
             echo "INFO     | Variable value: ${variable_value}"
             echo "variable_value=${variable_value}" >> $GITHUB_OUTPUT
           else
-            echo "ERROR    | Unable to get variable."
+            echo "ERROR    | Unable to get variable id and value."
             exit 1
           fi
 
       - name: Update variable
         run: |
-          echo "INFO     | Build required variable."
+          echo "INFO     | Building required variables."
           tfc_api_url="https://app.terraform.io/api/v2"
           auth_header="Authorization: Bearer ${TF_API_TOKEN}"
           content_header="Content-Type: application/vnd.api+json"
-          echo ${{ steps.get_variable.outputs.variable_value }}
           variable_value=$(echo -e "${{ steps.get_variable.outputs.variable_value }}")
-          variable_value=${variable_value//\"/\\\"}
-          echo "${variable_value}"
-          if [[ "${variable_value}" =~ ^\[.*\]$ ]]; then
-            echo "INFO     | Variabel is an array."
-            variable_value="${variable_value::-1}, ${{ github.event.inputs.module_name }}]"
+          if [[ "${{ github.event.inputs.module_name }}" =~ ^terraform-[a-zA-Z]+-[a-zA-Z0-9-]+$ ]]; then
+            echo "INFO     | Module's name use a three-part name format like `terraform-<PROVIDER>-<NAME>` and contain only alphanumeric and hypens."
           else
-            echo "not match"
+            echo "ERROR    | Module name must use a three-part name format like `terraform-<PROVIDER>-<NAME>` and contain only alphanumeric and hypens."
+            exit 1
+          fi
+          if [[ "${variable_value}" =~ ^\[.*\]$ ]]; then
+            echo "INFO     | Variable is an array."
+            echo "INFO     | Adding new module's name into the array."
+            variable_value="${variable_value::-1}, \"${{ github.event.inputs.module_name }}\"]"
+            echo "${variable_value}"
+            echo "INFO     | Converting `\"` into `\\"`."
+            variable_value=${variable_value//\"/\\\"}
+            echo "${variable_value}"
+          else
+            echo "ERROR    | Variable is not an array."
+            exit 1
           fi
           
           echo "${variable_value}"
