@@ -69,8 +69,8 @@ jobs:
           auth_header="Authorization: Bearer ${TF_API_TOKEN}"
           content_header="Content-Type: application/vnd.api+json"
           echo ${{ steps.get_variable.outputs.variable_value }}
-          variable_value="${{ steps.get_variable.outputs.variable_value }}"
-          echo -e "${variable_value}"
+          variable_value=$(echo -e ${{ steps.get_variable.outputs.variable_value }})
+          echo "${variable_value}"
           if [[ "${variable_value}" =~ [[a-zA-Z0-9\s,-]]+ ]]; then
           variable_value="${variable_value::-1}, ${{ github.event.inputs.module_name }}]"
           else
