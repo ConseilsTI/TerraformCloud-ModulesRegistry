@@ -122,7 +122,7 @@ jobs:
           variable_value=${variable_value//\"/\\\"}
           echo "INFO     | Building JSON payload."
           json_string='{"data":{"id":"'"${{ steps.get_variable.outputs.variable_id }}"'","attributes":{"value":"'"${variable_value}"'"},"type":"vars"}}'
-          json_payload=$(echo "${json_string}" | jq)
+          json_payload=$(printf "${json_string}" | jq)
           echo "INFO     | Running API call to update variable."
           {
             run=$(curl -sS --request PATCH --url "${tfc_api_url}/vars/${{ steps.get_variable.outputs.variable_id }}" \
