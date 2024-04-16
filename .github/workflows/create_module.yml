@@ -60,7 +60,7 @@ jobs:
             exit 1
           fi
 
-      - name: Modify variable
+      - name: Update variable
         run: |
           echo "INFO     | Build required variable."
           tfc_api_url="https://app.terraform.io/api/v2"
@@ -68,7 +68,22 @@ jobs:
           content_header="Content-Type: application/vnd.api+json"
           variable_value="${{ steps.get_variable.outputs.variable_value }}"
           echo "${variable_value::-1}"
-          variable_value="${variable_value::-1}, ${{ github.event.inputs.module_name }} ]"
+          variable_value="${variable_value::-1}, ${{ github.event.inputs.module_name }}]"
+          echo "INFO     | Build JSON payload."
           json_string='{"data":{"id":"'"${{ steps.get_variable.outputs.variable_id }}"'","attributes":{"value":"'"${variable_value}"'"},"type":"vars"}}'
           json_payload=$(echo "${json_string}" | jq)
           echo "${json_payload}"
+          echo "INFO     | Run API call to update variable."
+          {
+            run=$(curl --request PATCH --url "${tfc_api_url}/vars/${{ steps.get_variable.outputs.variable_id }}" \
+            --header "${auth_header}" --header "${content_header}" --data "${json_payload}")
+            if ! [[ "${run}" =~ "{\"data\":" ]]; then
+              echo "ERROR    | Unable to update variable."
+              echo "${run}"
+              exit 1
+            fi
+          } ||
+          {
+            echo "ERROR    | Unable to update variable."
+            exit 1
+          }
